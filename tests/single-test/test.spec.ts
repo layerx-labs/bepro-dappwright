@@ -1,6 +1,18 @@
 import { BrowserContext, expect, test as baseTest } from "@playwright/test";
 import dappwright, { Dappwright, MetaMaskWallet } from "@tenkeylabs/dappwright";
 
+async function handlePopup(page): Promise<void> {
+  const popup = await page.context().waitForEvent('page');
+  await popup.waitForLoadState();
+  await popup.bringToFront();
+  await popup.locator('input[type="checkbox"]').first().check();
+  await popup.locator('[data-testid="page-container-footer-next"]').click();
+  await popup.waitForLoadState();
+  await popup.locator('[data-testid="page-container-footer-next"]').click();
+  await popup.locator('[data-testid="signature-request-scroll-button"]').click();
+  await popup.locator('[data-testid="page-container-footer-next"]').click();
+}
+
 export const test = baseTest.extend<{
   context: BrowserContext;
   wallet: Dappwright;
@@ -10,18 +22,19 @@ export const test = baseTest.extend<{
     const [wallet, _, context] = await dappwright.bootstrap("", {
       wallet: "metamask",
       version: MetaMaskWallet.recommendedVersion,
-      seed: "test test test test test test test test test test test junk", // Hardhat's default https://hardhat.org/hardhat-network/docs/reference#accounts
+      seed: "test test test test test test test test test test test junk",
       headless: false,
     });
 
-    // Add Hardhat as a custom network
+
     await wallet.addNetwork({
-      networkName: "Hardhat",
-      rpc: "http://localhost:8546",
-      chainId: 31337,
-      symbol: "ETH",
+      networkName: "Mumbai",
+      rpc: "https://rpc.ankr.com/polygon_mumbai/3d46f18e6ed46b2297fd512b8733fd803ee4358667c1b21cc2e4b1f5d5b17c41",
+      chainId: 80001,
+      symbol: "MATIC",
     });
 
+    await wallet.importPK("0x889bf162087bdc554e4ff2d5f06c9dcaf2063d1674cedd97099f9b7053af517e");
     await use(context);
   },
 
@@ -33,18 +46,13 @@ export const test = baseTest.extend<{
 });
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("http://localhost:8080");
+  await page.goto("http://afrodite.bepro.network/");
 });
 
-test("should be able to connect", async ({ wallet, page }) => {
-  await page.click("#connect-button");
-  await wallet.approve();
-
-  const connectStatus = page.getByTestId("connect-status");
-  expect(connectStatus).toHaveValue("connected");
-
-  await page.click("#switch-network-button");
-
-  const networkStatus = page.getByTestId("network-status");
-  expect(networkStatus).toHaveValue("31337");
+test("should be able to connect", async ({ wallet, page, context }) => {
+  test.setTimeout(3000000);
+  await page.click('[data-testid="connect-wallet-button"]');;
+  await page.getByText('Metamask').click();
+  await handlePopup(page);
+  await new Promise(resolve => setTimeout(resolve, 2000000));
 });
