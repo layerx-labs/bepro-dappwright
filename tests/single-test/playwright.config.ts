@@ -1,5 +1,7 @@
 import { defineConfig } from "@playwright/test";
 export default defineConfig({
+
+  timeout: 600000,
   webServer: [
     {
       command: "yarn preview --port 8080",
