@@ -1,56 +1,95 @@
-import { Page, } from "@playwright/test";
+import { Page, expect} from "@playwright/test";
 import { Dappwright } from "@tenkeylabs/dappwright";
 import Locators from "../pages/locators";
 import { faker } from '@faker-js/faker';
 const locators = new Locators();
 
 export async function firstSignIn(page: Page): Promise<void> {
-    await page.click('[data-testid="connect-wallet-button"]');;
+    await page.locator('[data-testid="connect-wallet-button"]').click();
     await page.getByText('Metamask').click();
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
     await popup.locator('input[type="checkbox"]').first().check();
-    await popup.locator('[data-testid="page-container-footer-next"]').click();
+    await popup.locator("[data-testid='page-container-footer-next']").click();
     await popup.waitForLoadState();
-    await popup.locator('[data-testid="page-container-footer-next"]').click();
-    await popup.locator('[data-testid="signature-request-scroll-button"]').click();
-    await popup.locator('[data-testid="page-container-footer-next"]').click();
-    await page.click(locators.commonPageLocator.btnAcceptCookies);
-    await page.locator(locators.explorePageLocator.btnExplore).click();
+    await popup.locator("[data-testid='page-container-footer-next']").click();
+    await popup.locator("[data-testid='signature-request-scroll-button']").click();
+    await popup.locator("[data-testid='page-container-footer-next']").click();
+    await page.locator(locators.commonPageLocator.btnAcceptCookies).click();
+    await page.getByTestId(locators.explorePageLocator.btnExplore).click();
 }
 
-export async function customApprove(page: Page): Promise<void> {
+async function waitForTransactionComplete(page: Page) {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    let status = await page.$('.stats');
+    let textStatus = await status?.textContent();
+    console.log('status: ', status?.textContent());
+    if (textStatus === 'Pending') {
+        await waitForTransactionComplete(page);
+    } else {
+        console.log('done');
+    }
+}
+
+export async function wait(time: number) {
+    await new Promise((resolve) => setTimeout(resolve, time));
+}
+
+export async function customSign(page: Page, waitForTransaction: boolean = true) {
+    console.log('Signing');
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
-    await popup.locator('[data-testid="page-container-footer-next"]').click();
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    await popup.locator('[data-testid="page-container-footer-next"]').click();
-}
+    await popup.locator("[data-testid='page-container-footer-next']").click();
+    if(waitForTransaction){
+        await waitForTransactionComplete(page);
+    }
 
-export async function customConfirmTransaction(page: Page): Promise<void> {
+};
+
+export async function customApprove(page: Page, waitForTransaction: boolean = true): Promise<void> {
+    console.log('Approving');
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
-    await popup.locator('[data-testid="page-container-footer-next"]').click();
+    await popup.locator("[data-testid='page-container-footer-next']").click();
+    await wait(1000);
+    await popup.locator("[data-testid='page-container-footer-next']").click();
+    if(waitForTransaction){
+        await waitForTransactionComplete(page);
+    }
+
+}
+
+export async function customConfirmTransaction(page: Page, waitForTransaction: boolean = true): Promise<void> {
+    console.log('Confirming');
+    const popup = await page.context().waitForEvent('page');
+    await popup.waitForLoadState();
+    await popup.bringToFront();
+    await popup.locator("[data-testid='page-container-footer-next']").click();
+    if(waitForTransaction){
+        await waitForTransactionComplete(page);
+    }
+
 }
 
 export async function connectWallet(page: Page): Promise<void> {
-    await page.click('[data-testid="connect-wallet-button"]');;
+    await page.bringToFront();
+    await page.getByTestId("connect-wallet-button").click();
     await page.getByText('Metamask').click();
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
-    await popup.locator('[data-testid="page-container-footer-next"]').click();
-    await popup.locator('[data-testid="signature-request-scroll-button"]').click();
-    await popup.locator('[data-testid="page-container-footer-next"]').click();
+    await popup.locator("[data-testid='signature-request-scroll-button']").click();
+    await popup.locator("[data-testid='page-container-footer-next']").click();
 };
 
 export async function openMenuToCreate(page: Page, element: string) {
     await page.getByTestId(locators.commonPageLocator.btnCreate).click();
-    await page.getByTestId(locators.commonPageLocator.btnLaunchInOpenMarketplace).click();
+    await page.getByTestId(element).click();
     await page.getByTestId(locators.commonPageLocator.btnContinueCreation).click();
+    await wait(1000);
 };
 
 
@@ -61,15 +100,16 @@ export async function createDescription(): Promise<string> {
 
 
 export async function openSettingsPage(page: Page, element: string) {
-    await page.click(locators.commonPageLocator.profileIcon);
-    await page.click(element);
+    await page.getByTestId(locators.commonPageLocator.profileIcon).click();
+    await page.getByTestId(element).click();
 };
 
 export async function switchAccountAndConnect(page: Page, wallet: Dappwright, account: number): Promise<void> {
-    await page.click(locators.commonPageLocator.profileIcon);
-    await page.click(locators.commonPageLocator.btnDisconnectWallet);
+    await page.getByTestId(locators.commonPageLocator.profileIcon).click();
+    await page.getByTestId(locators.commonPageLocator.btnDisconnectWallet).click();
     await wallet.switchAccount(account);
-    connectWallet(page);
+    console.log('Switched to account: ', account);
+    await connectWallet(page);
 };
 
 export async function getRandomInt(min: number, max: number): Promise<number> {
@@ -85,3 +125,22 @@ export async function getRandomFloat(min: number, max: number): Promise<number> 
     return parseFloat(randomNumber.toFixed(2));
 };
 
+export async function tryToChangeParameters(page: Page, configToChange: string, valueToChange: number, saveButton: string) {
+    console.log('value in the input: ', await page.getByTestId(configToChange).inputValue());
+    
+    if (await page.getByTestId(configToChange).inputValue() == '0' || await page.getByTestId(configToChange).inputValue() == '') {
+        console.log('value: 0');
+        await wait(1000);
+        await tryToChangeParameters(page, configToChange, valueToChange, saveButton)
+    } else if (await page.getByTestId(configToChange).inputValue() == `${valueToChange}`) {
+        console.log('No need to change the value');
+        await page.getByTestId(locators.managementPageLocator.tabLogoAndColors).click();
+        return;
+    } else if (await page.getByTestId(configToChange).inputValue() != `${valueToChange}` && await page.getByTestId(configToChange).inputValue() != '0') {
+        console.log('changing value to : ', valueToChange);
+        await page.getByTestId(configToChange).fill(`${valueToChange}`);
+        await page.getByTestId(saveButton).first().click();
+        await customConfirmTransaction(page);
+        return;
+    }
+}

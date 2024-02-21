@@ -1,7 +1,6 @@
 import Locators from "../locators";
 import { Page, expect } from "@playwright/test";
-import { openMenuToCreate, getRandomInt, getRandomFloat, customApprove, customConfirmTransaction } from "../../single-test/custom-helper"
-import { Dappwright } from "@tenkeylabs/dappwright";
+import { openMenuToCreate, getRandomInt, wait, customApprove, customConfirmTransaction } from "../../single-test/custom-helper"
 import { faker } from '@faker-js/faker';
 export default class TaskPage extends Locators {
     link = 'https://afrodite.bepro.network';
@@ -10,7 +9,6 @@ export default class TaskPage extends Locators {
         const task = faker.lorem.words(5);
         return task.toString();
     }
-    //this method will be replaced for cy.createDescription()
     createTaskDescription() {
         const description = faker.lorem.paragraphs(2, '<br/>\n');
         return description.toString();
@@ -50,32 +48,36 @@ export default class TaskPage extends Locators {
     async fillTaskFirstPage(page: Page) {
         await openMenuToCreate(page, this.commonPageLocator.btnLaunchInOpenMarketplace);
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
-        
+
         await this.fillTaskTitle(page);
         await this.fillTaskDescription(page);
         await this.insertTag(page);
-        const taskOptions = [this.taskPageLocator.btnDesignCreateTask,this.taskPageLocator.btnOtherCreateTask, this.taskPageLocator.btnCodeCreateTask];
+        const taskOptions = [this.taskPageLocator.btnDesignCreateTask, this.taskPageLocator.btnOtherCreateTask, this.taskPageLocator.btnCodeCreateTask];
         await page.getByTestId(taskOptions[await getRandomInt(0, 2)]).click();
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
     }
 
     async createTask(page: Page) {
+        console.log('Creating task...');
+        
         await this.fillTaskFirstPage(page);
         await this.fillTaskValue(page);
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
         await page.getByTestId(this.taskPageLocator.btnApproveCreateTask).click();
 
         await customApprove(page);
-        await page.getByTestId(this.taskPageLocator.btnCreateTask).click({timeout: 200000});
+        await page.getByTestId(this.taskPageLocator.btnCreateTask).click({ timeout: 200000 });
         await customConfirmTransaction(page);
     }
 
     async changeTaskTags(page: Page) {
+        console.log('Changing task tags...');
+        await page.getByTestId(this.taskPageLocator.taskStatus).hover();
+        await wait(2000);
         await page.getByTestId(this.taskPageLocator.btnTaskEdit).click();
         await page.locator(this.taskPageLocator.reactInputDropdownEditTags).click();
         await this.getRandomTag(page);
         await page.getByText(this.elementText.btnSaveChanges).click();
-
     }
 
     async getRandomTag(page: Page) {
@@ -85,153 +87,127 @@ export default class TaskPage extends Locators {
     }
 
     async changeTaskValue(page: Page) {
+        console.log('Changing task value...');
+        
         await page.getByTestId(this.taskPageLocator.btnTaskUpdateAmount).click();
-        await new Promise (resolve => setTimeout(resolve, 2000));
+        await wait(2500);
         await page.getByTestId(this.taskPageLocator.inputSetReward).clear();
         await page.getByTestId(this.taskPageLocator.inputSetReward).fill('1001');
         await page.getByTestId(this.taskPageLocator.btnTaskUpdateAmountApprove).click();
-
         await customApprove(page);
         await page.getByTestId(this.taskPageLocator.btnTaskUpdateAmountConfirm).click();
         await customConfirmTransaction(page);
     }
 
     async createFundingRequest(page: Page) {
-        this.fillTaskFirstPage(page);
-        await page.click(this.taskPageLocator.btnSeekFundingCreateTask);
+        await this.fillTaskFirstPage(page);
+        await page.getByTestId(this.taskPageLocator.btnSeekFundingCreateTask).click();
         const value = this.createTaskValue();
-        await page.fill(this.taskPageLocator.inputTotalAmmount, `${value}`);
+        await page.getByTestId(this.taskPageLocator.inputTotalAmmount).fill(`${value}`);
 
-        await page.click(this.taskPageLocator.btnNextCreateTask);
-        await page.click(this.taskPageLocator.btnCreateTask);
+        await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
+        await page.getByTestId(this.taskPageLocator.btnCreateTask).click();
         await customConfirmTransaction(page);
     }
 
     async createFundingRequestWithReward(page: Page) {
         await this.fillTaskFirstPage(page);
-        await page.click(this.taskPageLocator.btnSeekFundingCreateTask);
+        await page.getByTestId(this.taskPageLocator.btnSeekFundingCreateTask).click();
 
         const value = this.createTaskValue();
-        await page.fill(this.taskPageLocator.inputTotalAmmount, `${value}`);
-        await page.click(this.taskPageLocator.switchSetFundersReward);
-        await page.fill(this.taskPageLocator.inputFundersReward, `${value}`);
-        await page.click(this.taskPageLocator.btnNextCreateTask);
-        await page.click(this.taskPageLocator.btnApproveCreateTask);
+        await page.getByTestId(this.taskPageLocator.inputTotalAmmount).fill(`${value}`);
+        await page.getByTestId(this.taskPageLocator.switchSetFundersReward).click();
+        await page.getByTestId(this.taskPageLocator.inputFundersReward).fill(`${value}`);
+        await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
+        await page.getByTestId(this.taskPageLocator.btnApproveCreateTask).click();
 
-        await customConfirmTransaction(page);
-        await page.click(this.taskPageLocator.btnCreateTask);
+        await customApprove(page);
+        await page.getByTestId(this.taskPageLocator.btnCreateTask).click();
         await customConfirmTransaction(page);
     }
 
     async changeTaskDescription(page: Page) {
+        console.log('Changing task description...');
+        await wait(1000);
         await page.getByTestId(this.taskPageLocator.btnTaskEdit).click();
-        await page.fill(this.commonPageLocator.textareaDescriptionCreateTaskDeliverableOrMarketplace, '')
-        await page.fill(this.commonPageLocator.textareaDescriptionCreateTaskDeliverableOrMarketplace, 'Description automaticaly changed for testing purposes');
+        await page.getByTestId(this.commonPageLocator.textareaDescriptionCreateTaskDeliverableOrMarketplace).fill('');
+        await page.getByTestId(this.commonPageLocator.textareaDescriptionCreateTaskDeliverableOrMarketplace).fill('Description automaticaly changed for testing purposes');
         await page.getByText('Save Changes').click();
         page.getByText('Success');
     }
     async cancelTask(page: Page) {
-        await page.click(this.taskPageLocator.btnTaskOptions);
-        await page.click(this.taskPageLocator.btnTaskCancel);
+        let status = await page.getByTestId(this.taskPageLocator.taskStatus).innerText();
+        if (status === 'Draft') {
+            console.log('Task status: ', status);
+            await wait(3000);
+        }
+        await page.getByTestId(this.taskPageLocator.btnTaskOptions).click();
+        await wait(1000);
+        await page.getByTestId(this.taskPageLocator.btnTaskCancel).click();
         await customConfirmTransaction(page);
     }
 
     async waitTaskChangeStatusToOpen(page: Page) {
-        await new Promise (resolve => setTimeout(resolve, 45000));
-        await page.reload();
+        await page.waitForLoadState('networkidle');
+        let status = await page.getByTestId(this.taskPageLocator.taskStatus).innerText();
+        console.log('status: ', status);
+        if (status === 'Draft') {
+            await page.reload();
+            await this.waitTaskChangeStatusToOpen(page);
+        } else {
+            console.log('Task status: ', status);
+        }
     }
 
     async createDeliverable(page: Page) {
+        console.log('Creating deliverable...');
         await this.waitTaskChangeStatusToOpen(page);
-        //     // Encontre o botão pelo seu texto
-        //     cy.get(this.commonPageLocator.btn).invoke('text').then(($buttonText) => {
-        //         cy.log($buttonText);
-        //         if ($buttonText.includes(this.elementText.btnStartWorking)) {
-        //             // O botão "Start Working" está presente, clique nele
-        //             cy.contains(this.elementText.btnStartWorking).should('be.enabled').click({ force: true });
+        page.getByTestId('start-working-btn').click();
+        page.getByTestId('deliverable-btn').click();
 
-        //             // Agora, clique no botão "Create Deliverable"
-        //             cy.contains(this.elementText.btnCreateDeliverable).should('be.enabled').click({ force: true });
-        //         } else {
-        //             // O botão "Start Working" não está presente, clique diretamente no botão "Create Deliverable"
-        //             cy.log('Start Working button not present, clicking Create Deliverable directly');
-        //             cy.contains(this.elementText.btnCreateDeliverable).should('be.enabled').click({ force: true });
-        //         }
-        //     });
-
-        //     cy.get(this.taskPageLocator.inputOriginLinkCreateTaskOrDeliverable).fill(this.link, { force: true });
-        //     cy.get(this.taskPageLocator.imgPreviewLinkDeliverable).should('be.visible');
-        //     cy.get(this.taskPageLocator.inputTitleCreateTaskOrDeliverable).fill(this.createTaskTitle(), { force: true });
-        //     cy.get(this.commonPageLocator.textareaDescriptionCreateTaskDeliverableOrMarketplace).fill(this.createTaskDescription(), { force: true });
-        //     cy.get(this.taskPageLocator.btnConfirmCreateDeliverable).should('be.enabled').click();
-
-        //     cy.confirmMetamaskTransaction();
-        //     cy.get(this.taskPageLocator.btnMarkAsReady).wait(1000).click();
-
-        //     cy.confirmMetamaskTransaction();
-        //     cy.get(this.taskPageLocator.btnArrowBackFromDeliverable).click({ force: true });
-        // }
-
-        // async createProposal() {
-        //     cy.get(this.taskPageLocator.btnCreateProposal).click({ force: true });
-        //     cy.contains(this.taskPageLocator.dropdownProposal, this.taskPageLocator.placeholderProposal).click({ force: true });
-        //     cy.get(this.taskPageLocator.dropdownOptionProposal).first().click({ force: true });
-        //     cy.get(this.taskPageLocator.btnModalCreateProposal).click({ force: true });
-
-        //     cy.confirmMetamaskTransaction();
-        // Encontre o botão pelo seu texto
-        const buttonText = await page.$eval(this.commonPageLocator.btn, button => button.textContent) || 'nothing';
-        console.log(buttonText);
-
-        if (buttonText.includes(this.elementText.btnStartWorking)) {
-            // O botão "Start Working" está presente, clique nele
-            const startWorkingButton = page.getByText(this.elementText.btnStartWorking);
-            if (startWorkingButton) {
-                await startWorkingButton.click();
-            }
-
-            // Agora, clique no botão "Create Deliverable"
-            const createDeliverableButton = page.getByText(this.elementText.btnCreateDeliverable);
-            if (createDeliverableButton) {
-                await createDeliverableButton.click();
-            }
-        } else {
-            // O botão "Start Working" não está presente, clique diretamente no botão "Create Deliverable"
-            console.log('Start Working button not present, clicking Create Deliverable directly');
-            const createDeliverableButton = page.getByText(this.elementText.btnCreateDeliverable);
-            if (createDeliverableButton) {
-                await createDeliverableButton.click();
-            }
-        }
-
-        await page.fill(this.taskPageLocator.inputOriginLinkCreateTaskOrDeliverable, this.link);
-        await page.waitForSelector(this.taskPageLocator.imgPreviewLinkDeliverable);
-        await page.fill(this.taskPageLocator.inputTitleCreateTaskOrDeliverable, this.createTaskTitle());
-        await page.fill(this.commonPageLocator.textareaDescriptionCreateTaskDeliverableOrMarketplace, this.createTaskDescription());
-        await page.click(this.taskPageLocator.btnConfirmCreateDeliverable);
+        await page.getByTestId(this.taskPageLocator.inputOriginLinkCreateTaskOrDeliverable).fill(this.link);
+        await page.getByTestId(this.taskPageLocator.inputTitleCreateTaskOrDeliverable).fill(this.createTaskTitle());
+        await page.getByTestId(this.commonPageLocator.textareaDescriptionCreateTaskDeliverableOrMarketplace).fill(this.createTaskDescription());
+        await page.getByTestId(this.taskPageLocator.btnConfirmCreateDeliverable).click();
 
         await customConfirmTransaction(page);
-        await page.click(this.taskPageLocator.btnMarkAsReady);
+        await page.getByTestId(this.taskPageLocator.btnMarkAsReady).click();
 
         await customConfirmTransaction(page);
-        await page.click(this.taskPageLocator.btnArrowBackFromDeliverable);
+        await page.getByTestId(this.taskPageLocator.btnArrowBackFromDeliverable).click();
+    }
+
+    async createProposal(page: Page) {
+        console.log('Creating proposal...');
+        await page.getByTestId(this.taskPageLocator.btnCreateProposal).click();
+        await page.locator(this.taskPageLocator.dropdownProposal).click();
+        const option = await page.$(this.taskPageLocator.dropdownOptionProposal);
+        await option?.click();
+        await page.getByTestId(this.taskPageLocator.btnModalCreateProposal).click();
+        await customConfirmTransaction(page);
     }
 
     async acceptProposal(page: Page) {
-        await page.$(this.taskPageLocator.btnViewProposal);
-        // await page.waitForSelector(this.taskPageLocator.componentProposalstatus);
-
-        // await page.waitForFunction((elementText, btnAcceptProposalSelector) => {
-        //     const text = document.querySelector(elementText).textContent;
-        //     return text.includes('Accept Proposal');
-        // }, {}, this.taskPageLocator.componentProposalstatus, this.elementText.btnAcceptProposal);
-
-        // await page.click(this.taskPageLocator.btnAcceptProposal);
-        // await page.waitForSelector(this.taskPageLocator.btnConfirmDistribution);
-        // await page.click(this.taskPageLocator.btnConfirmDistribution);
-
+        console.log('Accepting proposal...');
+        await wait(2000);
+        await page.getByTestId(this.taskPageLocator.btnViewProposal).nth(1).click();
+        await this.checkProposalStatus(page);
+        await page.getByTestId(this.taskPageLocator.btnAcceptProposal).nth(1).click();
+        await page.getByTestId(this.taskPageLocator.btnConfirmDistribution).click();
         await customConfirmTransaction(page);
+    }
 
+    async checkProposalStatus(page: Page) {
+        await wait(4000);
+        let btnDispute = await page.$(this.taskPageLocator.btnDisputeProposal);
+        if (await btnDispute?.isVisible()) {
+            await page.reload();
+            console.log('Dispute button visible');;
+            await this.checkProposalStatus(page);
+        }
+        else {
+            console.log('Dispute button not visible');;
+        }
     }
 
 }
