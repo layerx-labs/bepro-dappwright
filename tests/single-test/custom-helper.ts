@@ -21,7 +21,7 @@ export async function firstSignIn(page: Page): Promise<void> {
 }
 
 async function waitForTransactionComplete(page: Page) {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await wait(2000)
     let status = await page.$('.stats');
     let textStatus = await status?.textContent();
     console.log('status: ', status?.textContent());
@@ -29,6 +29,7 @@ async function waitForTransactionComplete(page: Page) {
         await waitForTransactionComplete(page);
     } else {
         console.log('done');
+        await wait(3000);
     }
 }
 
@@ -58,6 +59,8 @@ export async function customApprove(page: Page, waitForTransaction: boolean = tr
     await popup.locator("[data-testid='page-container-footer-next']").click();
     if(waitForTransaction){
         await waitForTransactionComplete(page);
+    } else {
+        await wait(5000);
     }
 
 }
@@ -70,6 +73,8 @@ export async function customConfirmTransaction(page: Page, waitForTransaction: b
     await popup.locator("[data-testid='page-container-footer-next']").click();
     if(waitForTransaction){
         await waitForTransactionComplete(page);
+    } else {
+        await wait(5000);
     }
 
 }

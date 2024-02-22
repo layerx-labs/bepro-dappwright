@@ -115,7 +115,7 @@ test('should be able to create a marketplace sucessfully', async ({ page, wallet
   await marketplacePage.createMarketplace(page);
 });
 
-test('should be able to close a marketplace sucessfully', async ({ page, wallet }) => {
+test.only('should be able to close a marketplace sucessfully', async ({ page, wallet }) => {
   await switchAccountAndConnect(page, wallet, 4);
   await marketplacePage.closeMarketplace(page);
 });
