@@ -19,6 +19,9 @@ export default class Locators {
         btnContinueCreation: 'Continue',
         btnCancelCreation: "Cancel",
         btnNotifications: "notifications-btn",
+        btnMarketPlaces: "marketplaces",
+        beproMarketPlace: "bepro",
+        btnCurators: "curators",
         btn: 'button',
         btnAcceptCookies: "#rcc-confirm-button",
         btnApproveLock: "approve-btn",
@@ -66,8 +69,8 @@ export default class Locators {
         textTaskValue: "span.text-white.caption-large.font-weight-normal",
         textareaTaskComments: "[data-testid='comments-textarea']",
         btnTaskComment: "[data-testid='comments-btn']",
-        btnTaskStartWorking: "[data-testid='start-working-btn']",
-        btnTaskCreateDeliverable: "[data-testid='deliverable-btn']",
+        btnTaskStartWorking: "start-working-btn",
+        btnTaskCreateDeliverable: "deliverable-btn",
         imgPreviewLinkDeliverable: "image-preview",
         btnMarkAsReady: "Mark as ready",
         btnCancelCreateDeliverable: '[data-testid="cancel"]',
@@ -117,7 +120,10 @@ export default class Locators {
 
     managementPageLocator = {
         //profile page
-        btnChangeProfileHandle:"[data-testid='user-edit-icon-btn']",
+        btnChangeProfileHandle:"user-edit-icon-btn",
+        inputChangeProfileHandle: 'user-name-edit-input',
+        btnSaveProfileHandle: 'user-name-save-button',
+        btnCopyAddress: 'copy-button',
         checkboxNotification: "[data-testid='switch']",
         inputEmail: "[data-testid='email-input']",
         btnSaveEmail: "[data-testid='notification-save-btn']",
@@ -194,23 +200,23 @@ export default class Locators {
     }
 
     curatorsPageLocator = {
-        inputSearchBar: '[data-testid="search-input"]',
-        btnCuratorsList: '[data-testid="Curators List"]',
-        btnReadyToPropose: '[data-testid="Ready to Propose"]',
-        btnReadyToDispute: '[data-testid="Ready to Dispute"]',
-        btnReacyToClose: '[data-testid="Ready to Close"]',
+        inputSearchBar: "search-input",
+        btnCuratorsList: "Curators List",
+        btnReadyToPropose: "Ready to Propose",
+        btnReadyToDispute: "Ready to Dispute",
+        btnReacyToClose: "Ready to Close",
     }
     
     leaderboardPageLocator = {
-        inputSearchbar: '[data-testid="search-input"]',
+        inputSearchbar: "search-input",
     }
 
     explorePageLocator = {
         btnExplore: "explore",
-        btnTechnology: '[data-testid="category-button-code"]',
-        btnCreative: '[data-testid="category-button-design"]',
-        btnMarketing: '[data-testid="category-button-marketing"]',
-        btnWriting: '[data-testid="category-button-writing"]',
+        btnTechnology: "category-button-code",
+        btnCreative: "category-button-design",
+        btnMarketing: "category-button-marketing",
+        btnWriting: "category-button-writing",
     }
 
 }

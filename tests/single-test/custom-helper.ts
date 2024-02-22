@@ -126,13 +126,12 @@ export async function getRandomFloat(min: number, max: number): Promise<number> 
 };
 
 export async function tryToChangeParameters(page: Page, configToChange: string, valueToChange: number, saveButton: string) {
-    console.log('value in the input: ', await page.getByTestId(configToChange).inputValue());
     
     if (await page.getByTestId(configToChange).inputValue() == '0' || await page.getByTestId(configToChange).inputValue() == '') {
         console.log('value: 0');
         await wait(1000);
         await tryToChangeParameters(page, configToChange, valueToChange, saveButton)
-    } else if (await page.getByTestId(configToChange).inputValue() == `${valueToChange}`) {
+    } else if (await page.getByTestId(configToChange).inputValue() == await formatValue(valueToChange)) {
         console.log('No need to change the value');
         await page.getByTestId(locators.managementPageLocator.tabLogoAndColors).click();
         return;
@@ -143,4 +142,16 @@ export async function tryToChangeParameters(page: Page, configToChange: string, 
         await customConfirmTransaction(page);
         return;
     }
+}
+
+async function formatValue(number: number): Promise<string> {
+    let formatedValue = number.toString();
+    formatedValue = formatedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return formatedValue;
+}
+
+export async function getClipBoard(page: Page): Promise<string> {
+    return await page.evaluate(() => {
+        return navigator.clipboard.readText();
+    });
 }

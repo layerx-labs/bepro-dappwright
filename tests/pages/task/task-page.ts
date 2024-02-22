@@ -59,7 +59,7 @@ export default class TaskPage extends Locators {
 
     async createTask(page: Page) {
         console.log('Creating task...');
-        
+
         await this.fillTaskFirstPage(page);
         await this.fillTaskValue(page);
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
@@ -72,11 +72,13 @@ export default class TaskPage extends Locators {
 
     async changeTaskTags(page: Page) {
         console.log('Changing task tags...');
-        await page.getByTestId(this.taskPageLocator.taskStatus).hover();
-        await wait(2000);
+        await page.getByTestId(this.taskPageLocator.taskStatus).isVisible();
+        await wait(5000);
         await page.getByTestId(this.taskPageLocator.btnTaskEdit).click();
+        await wait(1000);
         await page.locator(this.taskPageLocator.reactInputDropdownEditTags).click();
         await this.getRandomTag(page);
+        await wait(1000);
         await page.getByText(this.elementText.btnSaveChanges).click();
     }
 
@@ -88,7 +90,7 @@ export default class TaskPage extends Locators {
 
     async changeTaskValue(page: Page) {
         console.log('Changing task value...');
-        
+
         await page.getByTestId(this.taskPageLocator.btnTaskUpdateAmount).click();
         await wait(2500);
         await page.getByTestId(this.taskPageLocator.inputSetReward).clear();
@@ -100,6 +102,7 @@ export default class TaskPage extends Locators {
     }
 
     async createFundingRequest(page: Page) {
+        console.log('creating funding request');
         await this.fillTaskFirstPage(page);
         await page.getByTestId(this.taskPageLocator.btnSeekFundingCreateTask).click();
         const value = this.createTaskValue();
@@ -107,6 +110,19 @@ export default class TaskPage extends Locators {
 
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
         await page.getByTestId(this.taskPageLocator.btnCreateTask).click();
+        await customConfirmTransaction(page);
+    }
+
+    async fundIt(page: Page){
+        console.log('funding task');
+        await wait(2000);
+        await page.getByText('Fund Task').click();
+        await wait(1000);
+        await page.locator('span.input-group-text').click();
+        await page.getByText('Approve').click();
+        await customApprove(page);
+        await wait(4000); 
+        await page.locator('button.btn.btn-primary span').last().click();
         await customConfirmTransaction(page);
     }
 
@@ -130,17 +146,18 @@ export default class TaskPage extends Locators {
         console.log('Changing task description...');
         await wait(1000);
         await page.getByTestId(this.taskPageLocator.btnTaskEdit).click();
+        await wait(1000);
         await page.getByTestId(this.commonPageLocator.textareaDescriptionCreateTaskDeliverableOrMarketplace).fill('');
         await page.getByTestId(this.commonPageLocator.textareaDescriptionCreateTaskDeliverableOrMarketplace).fill('Description automaticaly changed for testing purposes');
+        await wait(1000);
         await page.getByText('Save Changes').click();
-        page.getByText('Success');
+        await expect(page.getByText(this.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
     }
     async cancelTask(page: Page) {
-        let status = await page.getByTestId(this.taskPageLocator.taskStatus).innerText();
-        if (status === 'Draft') {
-            console.log('Task status: ', status);
-            await wait(3000);
-        }
+        console.log('Canceling task');        
+        await expect(page.getByTestId(this.taskPageLocator.taskStatus)).toBeVisible({ timeout: 20000 });
+        await page.reload()
+        await wait(4000);
         await page.getByTestId(this.taskPageLocator.btnTaskOptions).click();
         await wait(1000);
         await page.getByTestId(this.taskPageLocator.btnTaskCancel).click();
@@ -151,7 +168,7 @@ export default class TaskPage extends Locators {
         await page.waitForLoadState('networkidle');
         let status = await page.getByTestId(this.taskPageLocator.taskStatus).innerText();
         console.log('status: ', status);
-        if (status === 'Draft') {
+        if (status === 'Draft' || status === 'Funding') {
             await page.reload();
             await this.waitTaskChangeStatusToOpen(page);
         } else {
@@ -162,8 +179,10 @@ export default class TaskPage extends Locators {
     async createDeliverable(page: Page) {
         console.log('Creating deliverable...');
         await this.waitTaskChangeStatusToOpen(page);
-        page.getByTestId('start-working-btn').click();
-        page.getByTestId('deliverable-btn').click();
+        page.getByTestId(this.taskPageLocator.btnTaskStartWorking).click();
+        await wait(1000);
+        page.getByTestId(this.taskPageLocator.btnTaskCreateDeliverable).click();
+        await wait(1000);
 
         await page.getByTestId(this.taskPageLocator.inputOriginLinkCreateTaskOrDeliverable).fill(this.link);
         await page.getByTestId(this.taskPageLocator.inputTitleCreateTaskOrDeliverable).fill(this.createTaskTitle());
@@ -189,24 +208,41 @@ export default class TaskPage extends Locators {
 
     async acceptProposal(page: Page) {
         console.log('Accepting proposal...');
-        await wait(2000);
+        await wait(4000);
         await page.getByTestId(this.taskPageLocator.btnViewProposal).nth(1).click();
         await this.checkProposalStatus(page);
+        await wait(5000);
         await page.getByTestId(this.taskPageLocator.btnAcceptProposal).nth(1).click();
         await page.getByTestId(this.taskPageLocator.btnConfirmDistribution).click();
         await customConfirmTransaction(page);
     }
 
+    async withdraw(page: Page){
+        console.log('withdrawing');
+        await wait(1000);
+        await page.locator('button.align-items-center.not-svg > svg').click();
+        await wait(1000);
+        
+        await page.locator('button.btn.btn-primary span.family-Regular.caption-medium.text-white.font-weight-normal').click();
+        await wait(1000);
+        await page.getByText('Withdraw Reward').click();
+        await wait(1000);
+        await page.locator('div.modal div.align-items-center span').click();
+        await customConfirmTransaction(page);
+
+    }
+
     async checkProposalStatus(page: Page) {
-        await wait(4000);
+        await wait(5000);
         let btnDispute = await page.$(this.taskPageLocator.btnDisputeProposal);
         if (await btnDispute?.isVisible()) {
-            await page.reload();
             console.log('Dispute button visible');;
+            await wait(5000);
+            await page.reload();
             await this.checkProposalStatus(page);
         }
         else {
-            console.log('Dispute button not visible');;
+            console.log('Dispute button not visible');
         }
     }
 

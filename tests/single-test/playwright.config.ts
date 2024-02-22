@@ -1,7 +1,9 @@
 import { defineConfig } from "@playwright/test";
 export default defineConfig({
-
-  timeout: 600000,
+  timeout: 180000,
+  use: {
+    permissions: ['clipboard-read', 'clipboard-write']
+  },
   webServer: [
     {
       command: "yarn preview --port 8080",

@@ -1,12 +1,12 @@
 import { BrowserContext, expect, test as baseTest } from "@playwright/test";
 import { openSettingsPage, getRandomInt, getRandomFloat } from "./custom-helper";
 import dappwright, { Dappwright, MetaMaskWallet } from "@tenkeylabs/dappwright";
-import { firstSignIn, switchAccountAndConnect } from "./custom-helper";
+import { firstSignIn, switchAccountAndConnect, wait } from "./custom-helper";
 import { environment } from "../../network-config";
 import Locators from "../pages/locators";
 import TaskPage from "../pages/task/task-page";
 import MarketplacePage from "../pages/marketplace/marketplace-page";
-import { VotingPowerPage, GovernancePage, RegistryPage} from "../pages/profile";
+import { VotingPowerPage, GovernancePage, RegistryPage } from "../pages/profile";
 const taskPage = new TaskPage();
 const marketplacePage = new MarketplacePage();
 const votingPowerPage = new VotingPowerPage();
@@ -51,39 +51,66 @@ test.beforeEach(async ({ page }) => {
   await firstSignIn(page);
 });
 
-test.afterEach(async ({ page }) => {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
-  await page.close();
+test.afterEach(async ({ context }) => {
+  await wait(2000);
+  await context.close();
 });
 
 test("should be able to create a task sucessfully", async ({ page }) => {
+  await openSettingsPage(page, locators.commonPageLocator.btnCustomMarketplaceProfileMenu);
+  await governancePage.setDisputeTime(page);
+  await governancePage.setDraftTime(page);
   await taskPage.createTask(page);
+  await expect(page.getByText('Draft').first()).toBeInViewport({ timeout: 20000 });
   await taskPage.changeTaskTags(page);
+  await expect(page.getByText(locators.elementText.toastySuccess)).toBeInViewport({ timeout: 20000 });
   await taskPage.changeTaskDescription(page);
+  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
   await taskPage.changeTaskValue(page);
+  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
   await taskPage.createDeliverable(page);
   await taskPage.createProposal(page);
   await taskPage.acceptProposal(page);
+  await expect(page.getByText(locators.elementText.textAccepted).first()).toBeVisible({ timeout: 20000 });
 
 });
 
 test("should be able to cancel a task sucessfully", async ({ page }) => {
+  await openSettingsPage(page, locators.commonPageLocator.btnCustomMarketplaceProfileMenu);
+  await registryPage.setCancelFee(page);
+  await governancePage.setDraftTime(page, 120000);
   await taskPage.createTask(page);
   await taskPage.cancelTask(page);
-
+  await expect(page.getByText('Canceled')).toBeVisible({ timeout: 20000 });
+  await openSettingsPage(page, locators.commonPageLocator.btnCustomMarketplaceProfileMenu);
+  await governancePage.setDraftTime(page);
 });
 
 test("should be able to create a funding request sucessfully", async ({ page }) => {
   await taskPage.createFundingRequest(page);
+  await taskPage.fundIt(page);
+  await taskPage.createDeliverable(page);
+  await taskPage.createProposal(page);
+  await taskPage.acceptProposal(page);
+  await expect(page.getByText(locators.elementText.textAccepted).first()).toBeVisible({ timeout: 20000 });
 
 });
 
 test("should be able to create a funding request with reward sucessfully", async ({ page }) => {
   await taskPage.createFundingRequestWithReward(page);
-
+  await taskPage.fundIt(page);
+  await taskPage.createDeliverable(page);
+  await taskPage.createProposal(page);
+  await taskPage.acceptProposal(page);
+  await expect(page.getByText(locators.elementText.textAccepted).first()).toBeVisible({ timeout: 20000 });
+  await taskPage.withdraw(page);
+  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
 });
 
 test('should be able to create a marketplace sucessfully', async ({ page, wallet }) => {
+  await openSettingsPage(page, locators.commonPageLocator.btnCustomMarketplaceProfileMenu);
+  await registryPage.setMarketplaceCreationAmount(page);
+  await registryPage.setMarketplaceCreationFee(page);
   await switchAccountAndConnect(page, wallet, 4);
   await marketplacePage.createMarketplace(page);
 });
@@ -95,14 +122,26 @@ test('should be able to close a marketplace sucessfully', async ({ page, wallet 
 
 test('should lock voting succesfully', async ({ page }) => {
   await openSettingsPage(page, locators.commonPageLocator.btnVotingPowerProfileMenu);
-  await votingPowerPage.selectMarketplaceAndNetwork(page, 'bepro', 'Mumbai');
   await votingPowerPage.lockVotes(page, 1000);
 });
+
 test('should unlock votes successfully', async ({ page }) => {
   await openSettingsPage(page, locators.commonPageLocator.btnVotingPowerProfileMenu);
-  await votingPowerPage.selectMarketplaceAndNetwork(page, 'bepro', 'Mumbai');
   await votingPowerPage.unlockVotes(page, 1000);
 });
+
+test('should change curator amount and still be a curator', async ({ page }) => {
+  await openSettingsPage(page, locators.commonPageLocator.btnCustomMarketplaceProfileMenu);
+  await governancePage.setCuratorAmount(page, 50);
+  await page.getByTestId(locators.commonPageLocator.btnVotingPowerProfileMenu).first().click();
+  await votingPowerPage.unlockAllVotes(page);
+  await page.reload();
+  await votingPowerPage.lockVotes(page, 100);
+  await page.getByTestId(locators.commonPageLocator.btnCustomMarketplaceProfileMenu).first().click();
+  await governancePage.setCuratorAmount(page, 80);
+  await votingPowerPage.checkCuratorStatus(page);
+  });
+
 test('should change Governor options successfully', async ({ page }) => {
   await openSettingsPage(page, locators.commonPageLocator.btnCustomMarketplaceProfileMenu);
   await governancePage.setDisputeTime(page, await getRandomInt(60, 1728000));
@@ -111,7 +150,6 @@ test('should change Governor options successfully', async ({ page }) => {
   await governancePage.setCuratorAmount(page, await getRandomInt(1, 10000));
   await governancePage.setMergerFee(page, await getRandomFloat(0, 10));
   await governancePage.setProposalCreatorFee(page, await getRandomFloat(0, 10));
-
 });
 
 test('should change registry options successfully', async ({ page }) => {
@@ -122,9 +160,6 @@ test('should change registry options successfully', async ({ page }) => {
   await registryPage.setMarketplaceCreationAmount(page, await getRandomInt(0, 50000));
 });
 
-// test('', async ({ page }) => {
-
-// });
 
 // test('', async ({ page }) => {
 

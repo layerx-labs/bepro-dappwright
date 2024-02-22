@@ -15,9 +15,9 @@ export default class MarketplacePage extends Locators {
 
         await openMenuToCreate(page, this.commonPageLocator.btnCreateYourMarketplace);
         await page.getByTestId(this.marketplacePageLocator.btnSelectNetworkNextStep).click();
-        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState();
         expect(page.locator('.d-flex.flex-wrap')).not.toBeFalsy();
-        await wait(3000);
+        await wait(5000);
         await page.getByText(this.elementText.btnMax).click();
 
         await page.getByTestId(this.commonPageLocator.btnApproveLock).click();
@@ -48,12 +48,18 @@ export default class MarketplacePage extends Locators {
 
         
         // //all confirmation to create network 
-        await customSign(page, false);
-        await customConfirmTransaction(page, false);
-        await customConfirmTransaction(page, false);
-        await customConfirmTransaction(page, false);
-        await customConfirmTransaction(page, false);
-        await customConfirmTransaction(page, false);
+        await customSign(page);
+        await wait(2000);
+        await customConfirmTransaction(page);
+        await wait(2000);
+        await customConfirmTransaction(page);
+        await wait(2000);
+        await customConfirmTransaction(page);
+        await wait(2000);
+        await customConfirmTransaction(page);
+        await wait(2000);
+        await customConfirmTransaction(page);
+        await wait(2000);
     }
     
     async openProfilePage(page: Page, element: string) {

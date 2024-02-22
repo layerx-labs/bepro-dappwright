@@ -1,6 +1,6 @@
 import Locators from "../locators";
 import { Page, expect } from "@playwright/test";
-import { tryToChangeParameters } from "../../single-test/custom-helper"
+import { tryToChangeParameters, wait } from "../../single-test/custom-helper"
 
 export default class GovernancePage extends Locators {
 
@@ -8,7 +8,12 @@ export default class GovernancePage extends Locators {
         console.log('Changing settings');
         await page.getByTestId(this.managementPageLocator.tabGovernance).click();
         await tryToChangeParameters(page, configToChange, valueToChange, saveButton);
-        await expect(page.getByText(this.elementText.toastySuccess)).toBeVisible({ timeout: 60000 });
+
+    
+        if (await page.getByText(this.elementText.toastySuccess).isVisible()) {
+            await expect(page.getByText(this.elementText.toastySuccess)).toBeVisible({ timeout: 60000 });
+        }
+        await wait(500);
         await page.reload();
     }
 

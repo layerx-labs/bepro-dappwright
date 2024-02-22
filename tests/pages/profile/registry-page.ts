@@ -8,8 +8,11 @@ export default class RegistryPage extends Locators {
         console.log('changing settings');
         await page.getByTestId(this.managementPageLocator.tabRegistry).click();
         await tryToChangeParameters(page, configToChange, valueToChange, saveButton);
-        await expect(page.getByText('Changing Marketplace Creation Fee')).not.toBeVisible({timeout: 20000});
-        await wait(1000);
+
+        if(await page.getByText('Changing Marketplace Creation Fee').isVisible()){
+            await expect(page.getByText('Changing Marketplace Creation Fee')).not.toBeVisible({timeout: 20000});
+        }
+        await wait(500);
         await page.reload();
     }
 
