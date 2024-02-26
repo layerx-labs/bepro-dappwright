@@ -1,17 +1,21 @@
 import Locators from "../locators";
 import { Page, expect } from "@playwright/test";
-import { tryToChangeParameters, wait } from "../../single-test/custom-helper"
+import { openSettingsPage, tryToChangeParameters, wait } from "../../single-test/custom-helper"
 
 export default class RegistryPage extends Locators {
 
     async setRegistrySettings(page: Page, configToChange: string, valueToChange: number, saveButton: string) {
         console.log('changing settings');
+        const span = await page.waitForSelector('span:text("Registry")', { timeout: 10000 }).catch(() => null)
+        if (!span) {
+            console.log('marketplace options page not opened');
+            await openSettingsPage(page, this.commonPageLocator.btnCustomMarketplaceProfileMenu);
+        }
         await page.getByTestId(this.managementPageLocator.tabRegistry).click();
         await tryToChangeParameters(page, configToChange, valueToChange, saveButton);
+        await page.waitForFunction(() => !document.querySelector('.spinner-border'), { timeout: 60000 });
+        expect(await page.$$('.spinner-border')).toHaveLength(0);
 
-        if(await page.getByText('Changing Marketplace Creation Fee').isVisible()){
-            await expect(page.getByText('Changing Marketplace Creation Fee')).not.toBeVisible({timeout: 20000});
-        }
         await wait(500);
         await page.reload();
     }

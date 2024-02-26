@@ -56,8 +56,6 @@ export default class MarketplacePage extends Locators {
         await customConfirmTransaction(page, false);
         await customConfirmTransaction(page, false);
         await customConfirmTransaction(page, false);
-        await page.getByTestId('btnCreateOne').isVisible()
-        await wait(5000);
     }
 
     async openProfilePage(page: Page, element: string) {

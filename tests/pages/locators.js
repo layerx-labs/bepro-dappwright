@@ -1,6 +1,7 @@
 export default class Locators {
 
     commonPageLocator = {
+        btnCreateOne: 'btnCreateOne',
         btnConnectWallet: "[data-testid='connect-wallet-button']",
         btnCreate: "create-marketplace-options-button",
         profileIcon: "avatar-or-identicon",
@@ -85,7 +86,7 @@ export default class Locators {
         btnRefuseProposal: '[data-testid="refuse-btn"]',
         btnCancelProposalModal: '[data-testid="modal-proposal-cancel-btn"]',
         btnConfirmDistribution: "modal-proposal-merge-btn",
-        btnDisputeProposal: '[data-testid="dispute-btn"]',
+        btnDisputeProposal: "dispute-btn",
         btnCancelUpdateTask: '[data-testid="update-amount-modal-cancel-btn"]',
         btnConfirmUpdateTask: '[data-testid="update-amount-modal-confirm-btn"]',
         textStatusProposal: '#root-container > div.container-xl > div > div > div.mt-3.row.justify-content-between > div:nth-child(2) > div > div:nth-child(1) > div.row.mb-2.proposal-progress-bar.align-items-center > div:nth-child(1) > h4',
@@ -137,8 +138,8 @@ export default class Locators {
         inputBeproVotesAmountToUnlock: "TBEPRO Votes Amount",
         btnGetVotesUnlock: "[data-testid='get-votes-btn']",
         modalConfirmGetVotes: "modal-oracle-confirm-btn",
-        inputDelegateVotesAmount: "[data-testid='votes-amount-input']",
-        inputDelegateVotesAddress: "[data-testid='delegate-address-input']",
+        inputDelegateVotesAmount: "votes-amount-input",
+        inputDelegateVotesAddress: "delegate-address-input",
         btnDelegateVotes: "Delegate",
         btnTakeBackVotes: "take-back-btn",
         tabLogoAndColors: "tab-Logo & Colors",

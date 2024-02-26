@@ -1,6 +1,7 @@
 import Locators from "../locators";
 import { Page, expect } from "@playwright/test";
 import { openMenuToCreate, getClipBoard, wait, customApprove, customConfirmTransaction } from "../../single-test/custom-helper"
+import { environment } from "../../../network-config";
 import { faker } from '@faker-js/faker';
 
 export default class VotingPowerPage extends Locators {
@@ -13,6 +14,14 @@ export default class VotingPowerPage extends Locators {
         await page.locator(this.commonPageLocator.classOptionDropdown).getByText(networkName).click();
     }
 
+    async delegateVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = 'Mumbai') {
+        await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName)
+        await this.checkValue(page);
+        await page.getByTestId(this.managementPageLocator.inputDelegateVotesAmount).fill(`${votes}`);
+        await page.getByTestId(this.managementPageLocator.inputDelegateVotesAddress).fill(`${environment.WALLET_ADDRESS}`);
+        await page.getByTestId(this.managementPageLocator.btnDelegateVotes).click();
+        await customConfirmTransaction(page);
+    }
 
     async lockVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = 'Mumbai') {
         await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName)

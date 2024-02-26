@@ -1,4 +1,4 @@
-import { Page, expect} from "@playwright/test";
+import { Page, expect } from "@playwright/test";
 import { Dappwright } from "@tenkeylabs/dappwright";
 import Locators from "../pages/locators";
 import { faker } from '@faker-js/faker';
@@ -43,7 +43,7 @@ export async function customSign(page: Page, waitForTransaction: boolean = true)
     await popup.waitForLoadState();
     await popup.bringToFront();
     await popup.locator("[data-testid='page-container-footer-next']").click();
-    if(waitForTransaction){
+    if (waitForTransaction) {
         await waitForTransactionComplete(page);
     }
 
@@ -57,12 +57,14 @@ export async function customApprove(page: Page, waitForTransaction: boolean = tr
     await popup.locator("[data-testid='page-container-footer-next']").click();
     await wait(1000);
     await popup.locator("[data-testid='page-container-footer-next']").click();
-    if(waitForTransaction){
+    if (waitForTransaction) {
         await waitForTransactionComplete(page);
     } else {
-        await wait(5000);
+        await wait(1000);
     }
-
+    if (await checkApproveDone(page)) {
+        await customApprove(page, waitForTransaction);
+    }
 }
 
 export async function customConfirmTransaction(page: Page, waitForTransaction: boolean = true): Promise<void> {
@@ -71,10 +73,10 @@ export async function customConfirmTransaction(page: Page, waitForTransaction: b
     await popup.waitForLoadState();
     await popup.bringToFront();
     await popup.locator("[data-testid='page-container-footer-next']").click();
-    if(waitForTransaction){
+    if (waitForTransaction) {
         await waitForTransactionComplete(page);
     } else {
-        await wait(5000);
+        await wait(1000);
     }
 
 }
@@ -105,8 +107,8 @@ export async function createDescription(): Promise<string> {
 
 
 export async function openSettingsPage(page: Page, element: string) {
-    await page.getByTestId(locators.commonPageLocator.profileIcon).click();
-    await page.getByTestId(element).click();
+    await page.getByTestId(locators.commonPageLocator.profileIcon).first().click();
+    await page.getByTestId(element).first().click();
 };
 
 export async function switchAccountAndConnect(page: Page, wallet: Dappwright, account: number): Promise<void> {
@@ -131,7 +133,7 @@ export async function getRandomFloat(min: number, max: number): Promise<number> 
 };
 
 export async function tryToChangeParameters(page: Page, configToChange: string, valueToChange: number, saveButton: string) {
-    
+
     if (await page.getByTestId(configToChange).inputValue() == '0' || await page.getByTestId(configToChange).inputValue() == '') {
         console.log('value: 0');
         await wait(1000);
@@ -159,4 +161,21 @@ export async function getClipBoard(page: Page): Promise<string> {
     return await page.evaluate(() => {
         return navigator.clipboard.readText();
     });
+}
+
+export async function checkApproveDone(page: Page): Promise<boolean> {
+    const approve = await page.waitForSelector('button:text("approve")', { timeout: 5000 }).catch(() => null);
+    const botaoApprove = await page.waitForSelector('button:text("Approve")', { timeout: 5000 }).catch(() => null);
+    if (botaoApprove) {
+        console.log('Approve found');
+        await botaoApprove.click();
+        return true;
+    } else if (approve) {
+        console.log('approve found');
+        await approve.click();
+        return true;
+    }{
+        console.log('Approve not found');
+        return false;
+    }
 }
