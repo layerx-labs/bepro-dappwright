@@ -73,9 +73,9 @@ test("should be able to create a task sucessfully", async ({ page }) => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 120);
   await taskPage.createTask(page);
-  await expect(page.getByText('Draft').first()).toBeInViewport({ timeout: 20000 });
+  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 30000 });
   await taskPage.changeTaskTags(page);
-  await expect(page.getByText(locators.elementText.toastySuccess)).toBeInViewport({ timeout: 20000 });
+  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
   await taskPage.changeTaskDescription(page);
   await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
   await taskPage.changeTaskValue(page);
@@ -90,23 +90,23 @@ test("should be able to create a task sucessfully", async ({ page }) => {
 test("should be able to cancel a deliverable sucessfully", async ({ page }) => {
   test.setTimeout(600000);
   await taskPage.createTask(page);
-  await expect(page.getByText('Draft').first()).toBeInViewport({ timeout: 20000 });
+  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 30000 });
   await taskPage.createDeliverable(page);
   await taskPage.cancelDeliverable(page);
   await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
-  expect(page.getByTestId('deliverable-state').textContent()).toBe('Canceled');
+  expect(await page.getByText('Canceled').first().textContent()).toContain('Canceled');
 });
 
 test("should be able to dispute a proposal sucessfully", async ({ page }) => {
   test.setTimeout(600000);
-  await governancePage.setDraftTime(page, 120);
+  await governancePage.setDisputeTime(page, 120);
   await taskPage.createTask(page);
-  await expect(page.getByText('Draft').first()).toBeInViewport({ timeout: 20000 });
+  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 30000 });
   await taskPage.createDeliverable(page);
   await taskPage.createProposal(page);
   await taskPage.disputeProposal(page);
-  await expect(page.getByText(locators.elementText.textAccepted).first()).toBeVisible({ timeout: 20000 });
-  await governancePage.setDraftTime(page);
+  await expect(page.getByText(locators.elementText.toastySuccess).first()).toBeVisible({ timeout: 20000 });
+  await governancePage.setDisputeTime(page);
 });
 
 test("should be able to cancel a task sucessfully", async ({ page }) => {

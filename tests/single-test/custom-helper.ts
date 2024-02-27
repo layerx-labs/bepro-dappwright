@@ -174,7 +174,7 @@ export async function checkApproveDone(page: Page): Promise<boolean> {
         console.log('approve found');
         await approve.click();
         return true;
-    }{
+    } else {
         console.log('Approve not found');
         return false;
     }
