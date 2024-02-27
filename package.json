@@ -11,7 +11,7 @@
     "chain": "hardhat node --port 8546",
     "test:single-test": "npm run build && playwright test -c tests/single-test/playwright.config.ts tests/single-test",
     "test:multiple-files": "npm run build && playwright test -c tests/multiple-files/playwright.config.ts tests/multiple-files",
-    "test:multiple-wallets": "npm run build && playwright test -c tests/multiple-wallets/playwright.config.ts tests/multiple-wallets",
+    "test:multiple-wallets": "npm run build && playwright test -c tests/multiple-wallets/playwright.config.ts tests/multiple-wallets"
   },
   "dependencies": {
     "dotenv": "^16.4.4",
