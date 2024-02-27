@@ -64,7 +64,6 @@ export default class TaskPage extends Locators {
         await this.fillTaskValue(page);
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
         await page.getByTestId(this.taskPageLocator.btnApproveCreateTask).click();
-
         await customApprove(page);
         await page.getByTestId(this.taskPageLocator.btnCreateTask).click({ timeout: 200000 });
         await customConfirmTransaction(page);
@@ -109,6 +108,7 @@ export default class TaskPage extends Locators {
         await page.getByTestId(this.taskPageLocator.inputTotalAmmount).fill(`${value}`);
 
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
+        await wait(1000);
         await page.getByTestId(this.taskPageLocator.btnCreateTask).click();
         await customConfirmTransaction(page);
     }
@@ -165,7 +165,7 @@ export default class TaskPage extends Locators {
     }
 
     async waitTaskChangeStatusToOpen(page: Page) {
-        await page.waitForLoadState('networkidle');
+        await wait(10000);
         let status = await page.getByTestId(this.taskPageLocator.taskStatus).innerText();
         console.log('status: ', status);
         if (status === 'Draft' || status === 'Funding') {
@@ -179,9 +179,10 @@ export default class TaskPage extends Locators {
     async createDeliverable(page: Page) {
         console.log('Creating deliverable...');
         await this.waitTaskChangeStatusToOpen(page);
-        page.getByTestId(this.taskPageLocator.btnTaskStartWorking).click();
+        await wait(2000);
+        await page.getByTestId(this.taskPageLocator.btnTaskStartWorking).click();
         await wait(1000);
-        page.getByTestId(this.taskPageLocator.btnTaskCreateDeliverable).click();
+        await page.getByTestId(this.taskPageLocator.btnTaskCreateDeliverable).click();
         await wait(1000);
 
         await page.getByTestId(this.taskPageLocator.inputOriginLinkCreateTaskOrDeliverable).fill(this.link);
@@ -196,6 +197,16 @@ export default class TaskPage extends Locators {
         await page.getByTestId(this.taskPageLocator.btnArrowBackFromDeliverable).click();
     }
 
+    async cancelDeliverable(page: Page) {
+        console.log('Canceling deliverable...');
+        await page.getByTestId('actions.review').click();
+        await wait(1000);
+        await page.locator('button.border').click();
+        await wait(2000);
+        await page.getByTestId('cancel').click();
+        await customConfirmTransaction(page);
+    }
+
     async createProposal(page: Page) {
         console.log('Creating proposal...');
         await page.getByTestId(this.taskPageLocator.btnCreateProposal).click();
@@ -208,15 +219,22 @@ export default class TaskPage extends Locators {
 
     async acceptProposal(page: Page) {
         console.log('Accepting proposal...');
-        await wait(4000);
         await page.getByTestId(this.taskPageLocator.btnViewProposal).nth(1).click();
+        await wait(4000);
         await this.checkProposalStatus(page);
-        await wait(5000);
+        await wait(1000);
         await page.getByTestId(this.taskPageLocator.btnAcceptProposal).nth(1).click();
         await page.getByTestId(this.taskPageLocator.btnConfirmDistribution).click();
         await customConfirmTransaction(page);
     }
 
+    async disputeProposal(page: Page) {
+        console.log('Disputing proposal...');
+        await wait(4000);
+        await page.getByTestId(this.taskPageLocator.btnViewProposal).nth(1).click();
+        await page.getByTestId(this.taskPageLocator.btnDisputeProposal).click();
+        await customConfirmTransaction(page);
+    }
     async withdraw(page: Page){
         console.log('withdrawing');
         await wait(1000);
@@ -233,16 +251,14 @@ export default class TaskPage extends Locators {
     }
 
     async checkProposalStatus(page: Page) {
-        await wait(5000);
-        let btnDispute = await page.$(this.taskPageLocator.btnDisputeProposal);
-        if (await btnDispute?.isVisible()) {
-            console.log('Dispute button visible');;
-            await wait(5000);
-            await page.reload();
+        await page.reload();
+        await wait(10000);
+        if (!await page.getByTestId(this.taskPageLocator.btnAcceptProposal).last().isVisible()) {
+            console.log('Accept button not visible');
             await this.checkProposalStatus(page);
         }
         else {
-            console.log('Dispute button not visible');
+            console.log('Accept button visible');
         }
     }
 

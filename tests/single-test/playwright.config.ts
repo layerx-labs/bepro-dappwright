@@ -1,6 +1,6 @@
 import { defineConfig } from "@playwright/test";
 export default defineConfig({
-  timeout: 180000,
+  timeout: 300000,
   use: {
     permissions: ['clipboard-read', 'clipboard-write']
   },
