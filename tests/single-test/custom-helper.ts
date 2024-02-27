@@ -6,7 +6,7 @@ const locators = new Locators();
 
 export async function firstSignIn(page: Page): Promise<void> {
     await page.locator('[data-testid="connect-wallet-button"]').click();
-    await page.getByText('Metamask').click();
+    await page.locator('[data-testid="rk-wallet-option-io.metamask"]').click();
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
@@ -14,7 +14,7 @@ export async function firstSignIn(page: Page): Promise<void> {
     await popup.locator("[data-testid='page-container-footer-next']").click();
     await popup.waitForLoadState();
     await popup.locator("[data-testid='page-container-footer-next']").click();
-    await popup.locator("[data-testid='signature-request-scroll-button']").click();
+    await popup.locator(".request-signature__body").scrollIntoViewIfNeeded();
     await popup.locator("[data-testid='page-container-footer-next']").click();
     await page.locator(locators.commonPageLocator.btnAcceptCookies).click();
     await page.getByTestId(locators.explorePageLocator.btnExplore).click();
