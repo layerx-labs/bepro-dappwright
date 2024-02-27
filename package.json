@@ -1,17 +1,12 @@
 {
-  "name": "vite-project",
+  "name": "bepro-dappwright",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "//": "Metamask locks chainIDs on port 8545 https://hardhat.org/hardhat-network/docs/metamask-issue",
-    "chain": "hardhat node --port 8546",
-    "test:single-test": "npm run build && playwright test -c tests/single-test/playwright.config.ts tests/single-test",
-    "test:multiple-files": "npm run build && playwright test -c tests/multiple-files/playwright.config.ts tests/multiple-files",
-    "test:multiple-wallets": "npm run build && playwright test -c tests/multiple-wallets/playwright.config.ts tests/multiple-wallets"
+    "test:single-test": "playwright test -c tests/single-test/playwright.config.ts tests/single-test",
+    "test:multiple-files": "playwright test -c tests/multiple-files/playwright.config.ts tests/multiple-files",
+    "test:multiple-wallets": "playwright test -c tests/multiple-wallets/playwright.config.ts tests/multiple-wallets"
   },
   "dependencies": {
     "dotenv": "^16.4.4",
@@ -22,8 +17,6 @@
   "devDependencies": {
     "@playwright/test": "^1.41.0",
     "@tenkeylabs/dappwright": "^2.8.0",
-    "hardhat": "^2.13.0",
-    "typescript": "^4.9.3",
-    "vite": "^4.1.5"
+    "typescript": "^4.9.3"
   }
 }
