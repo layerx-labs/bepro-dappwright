@@ -56,7 +56,7 @@ test.afterEach(async ({ context }) => {
   await context.close();
 });
 
-test.only('should change return Governor and Registry options to default successfully', async ({ page }) => {
+test('should change return Governor and Registry options to default successfully', async ({ page }) => {
   await governancePage.setDisputeTime(page);
   await governancePage.setPercentageForDispute(page);
   await governancePage.setDraftTime(page);

@@ -3,7 +3,7 @@ export default defineConfig({
   timeout: 300000,
   use: {
     permissions: ['clipboard-read', 'clipboard-write'],
-    screenshot: 'only-on-failure'
+    screenshot: 'only-on-failure',
   },
   webServer: [
     // {
