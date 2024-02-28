@@ -1,6 +1,6 @@
-import { Page, expect } from "@playwright/test";
+import { Page } from "@playwright/test";
 import { Dappwright } from "@tenkeylabs/dappwright";
-import Locators from "../pages/locators";
+import Locators from "src/pages/locators";
 import { faker } from '@faker-js/faker';
 const locators = new Locators();
 
@@ -8,7 +8,7 @@ export async function firstSignIn(page: Page): Promise<void> {
     await page.getByTestId("connect-wallet-button").click();
     await wait(2000);
     await page.waitForSelector('button:has(svg[width="18"][height="16"][viewBox="0 0 18 16"])');
-    await page.getByText('Metamask').click();
+    await page.getByTestId("rk-wallet-option-io.metamask").click();
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
@@ -16,7 +16,7 @@ export async function firstSignIn(page: Page): Promise<void> {
     await popup.getByTestId("page-container-footer-next").click();
     await popup.waitForLoadState();
     await popup.getByTestId("page-container-footer-next").click();
-    await popup.getByTestId("signature-request-scroll-button").click();
+    await popup.locator(".request-signature__body").scrollIntoViewIfNeeded();
     await popup.getByTestId("page-container-footer-next").click();
     await page.locator(locators.commonPageLocator.btnAcceptCookies).click();
     await page.getByTestId(locators.explorePageLocator.btnExplore).click();

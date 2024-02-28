@@ -1,4 +1,4 @@
-import Locators from "../locators";
+import Locators from "src/pages/locators";
 import { Page } from "@playwright/test";
 import { faker } from '@faker-js/faker';
 

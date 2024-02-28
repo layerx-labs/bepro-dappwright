@@ -2,11 +2,11 @@ import { BrowserContext, expect, test as baseTest } from "@playwright/test";
 import { openSettingsPage, getRandomInt, getRandomFloat } from "./custom-helper";
 import dappwright, { Dappwright, MetaMaskWallet } from "@tenkeylabs/dappwright";
 import { firstSignIn, switchAccountAndConnect, wait } from "./custom-helper";
-import { environment } from "../../network-config";
-import Locators from "../pages/locators";
-import TaskPage from "../pages/task/task-page";
-import MarketplacePage from "../pages/marketplace/marketplace-page";
-import { VotingPowerPage, GovernancePage, RegistryPage } from "../pages/profile";
+import { environment } from "network-config";
+import Locators from "src/pages/locators";
+import TaskPage from "src/pages/task/task-page";
+import MarketplacePage from "src/pages/marketplace/marketplace-page";
+import { VotingPowerPage, GovernancePage, RegistryPage } from "src/pages/profile";
 const taskPage = new TaskPage();
 const marketplacePage = new MarketplacePage();
 const votingPowerPage = new VotingPowerPage();
@@ -195,7 +195,3 @@ test('should change registry options successfully', async ({ page }) => {
   await registryPage.setMarketplaceCreationFee(page, await getRandomFloat(0, 99));
   await registryPage.setMarketplaceCreationAmount(page, await getRandomInt(0, 50000));
 });
-
-// test('', async ({ page }) => {
-
-// });
