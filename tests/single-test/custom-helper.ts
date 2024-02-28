@@ -6,8 +6,6 @@ const locators = new Locators();
 
 export async function firstSignIn(page: Page): Promise<void> {
     await page.getByTestId("connect-wallet-button").click();
-    await wait(2000);
-    await page.waitForSelector('button:has(svg[width="18"][height="16"][viewBox="0 0 18 16"])');
     await page.getByTestId("rk-wallet-option-io.metamask").click();
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();

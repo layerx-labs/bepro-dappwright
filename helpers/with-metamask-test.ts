@@ -27,7 +27,6 @@ export function withMetaMaskTest() {
       await wallet.importPK(environment.PRIVATE_KEY);
       await use(context);
     },
-
     wallet: async ({ context }, use) => {
       const metamask = await dappwright.getWallet("metamask", context);
 
