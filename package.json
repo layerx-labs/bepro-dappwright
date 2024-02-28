@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "test:metamask": "playwright test -c tests/signin/playwright.config.ts tests/signin",
+    "test:metamask": "playwright test -c tests/signin/playwright.config.ts tests/signin/coinbase*",
     "test:single-test": "playwright test -c tests/single-test/playwright.config.ts tests/single-test",
     "test:multiple-files": "playwright test -c tests/multiple-files/playwright.config.ts tests/multiple-files",
     "test:multiple-wallets": "playwright test -c tests/multiple-wallets/playwright.config.ts tests/multiple-wallets"
