@@ -1,4 +1,4 @@
-import Locators from "src/pages/locators";
+import Locators from "pages/locators";
 import { Page, expect } from "@playwright/test";
 import { getClipBoard, wait, customApprove, customConfirmTransaction } from "tests/single-test/custom-helper";
 import { environment } from "network-config";

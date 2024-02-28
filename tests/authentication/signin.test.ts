@@ -1,8 +1,8 @@
 import { expect } from "@playwright/test";
 
-import { withMetaMaskTest } from "src/helpers/with-metamask-test";
+import { withMetaMaskTest } from "helpers/with-metamask-test";
 import { environment } from "network-config";
-import { wait } from "src/utils/wait";
+import { wait } from "utils/wait";
 
 const metaMaskSignInTest = withMetaMaskTest();
 

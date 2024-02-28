@@ -16,6 +16,6 @@
     "skipLibCheck": true,
     "baseUrl": "."
   },
-  "include": ["src", "tests", "playwright.config.ts", "**/*.ts"],
+  "include": ["tests", "playwright.config.ts", "**/*.ts"],
   "exclude": ["node_modules"]
 }

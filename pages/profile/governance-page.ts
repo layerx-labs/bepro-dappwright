@@ -1,4 +1,4 @@
-import Locators from "src/pages/locators";
+import Locators from "pages/locators";
 import { Page, expect } from "@playwright/test";
 import { openSettingsPage, tryToChangeParameters, wait } from "tests/single-test/custom-helper"
 

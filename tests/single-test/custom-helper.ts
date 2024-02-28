@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
 import { Dappwright } from "@tenkeylabs/dappwright";
-import Locators from "src/pages/locators";
+import Locators from "pages/locators";
 import { faker } from '@faker-js/faker';
 const locators = new Locators();
 

@@ -3,10 +3,10 @@ import { openSettingsPage, getRandomInt, getRandomFloat } from "./custom-helper"
 import dappwright, { Dappwright, MetaMaskWallet } from "@tenkeylabs/dappwright";
 import { firstSignIn, switchAccountAndConnect, wait } from "./custom-helper";
 import { environment } from "network-config";
-import Locators from "src/pages/locators";
-import TaskPage from "src/pages/task/task-page";
-import MarketplacePage from "src/pages/marketplace/marketplace-page";
-import { VotingPowerPage, GovernancePage, RegistryPage } from "src/pages/profile";
+import Locators from "pages/locators";
+import TaskPage from "pages/task/task-page";
+import MarketplacePage from "pages/marketplace/marketplace-page";
+import { VotingPowerPage, GovernancePage, RegistryPage } from "pages/profile";
 const taskPage = new TaskPage();
 const marketplacePage = new MarketplacePage();
 const votingPowerPage = new VotingPowerPage();

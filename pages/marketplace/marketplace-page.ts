@@ -1,4 +1,4 @@
-import Locators from "src/pages/locators";
+import Locators from "pages/locators";
 import { faker } from '@faker-js/faker';
 import { Page, expect } from "@playwright/test";
 import { openMenuToCreate, wait, createDescription, customApprove, customConfirmTransaction, customSign } from "tests/single-test/custom-helper"
