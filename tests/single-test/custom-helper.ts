@@ -5,17 +5,17 @@ import { faker } from '@faker-js/faker';
 const locators = new Locators();
 
 export async function firstSignIn(page: Page): Promise<void> {
-    await page.locator('[data-testid="connect-wallet-button"]').click();
+    await page.getByTestId("connect-wallet-button").click();
     await page.getByText('Metamask').click();
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
     await popup.locator('input[type="checkbox"]').first().check();
-    await popup.locator("[data-testid='page-container-footer-next']").click();
+    await popup.getByTestId("page-container-footer-next").click();
     await popup.waitForLoadState();
-    await popup.locator("[data-testid='page-container-footer-next']").click();
-    await popup.locator("[data-testid='signature-request-scroll-button']").click();
-    await popup.locator("[data-testid='page-container-footer-next']").click();
+    await popup.getByTestId("page-container-footer-next").click();
+    await popup.getByTestId("signature-request-scroll-button").click();
+    await popup.getByTestId("page-container-footer-next").click();
     await page.locator(locators.commonPageLocator.btnAcceptCookies).click();
     await page.getByTestId(locators.explorePageLocator.btnExplore).click();
 }
@@ -42,7 +42,7 @@ export async function customSign(page: Page, waitForTransaction: boolean = true)
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
-    await popup.locator("[data-testid='page-container-footer-next']").click();
+    await popup.getByTestId("page-container-footer-next").click();
     if (waitForTransaction) {
         await waitForTransactionComplete(page);
     }
@@ -54,9 +54,9 @@ export async function customApprove(page: Page, waitForTransaction: boolean = tr
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
-    await popup.locator("[data-testid='page-container-footer-next']").click();
+    await popup.getByTestId("page-container-footer-next").click();
     await wait(1000);
-    await popup.locator("[data-testid='page-container-footer-next']").click();
+    await popup.getByTestId("page-container-footer-next").click();
     if (waitForTransaction) {
         await waitForTransactionComplete(page);
     } else {
@@ -72,7 +72,7 @@ export async function customConfirmTransaction(page: Page, waitForTransaction: b
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
-    await popup.locator("[data-testid='page-container-footer-next']").click();
+    await popup.getByTestId("page-container-footer-next").click();
     if (waitForTransaction) {
         await waitForTransactionComplete(page);
     } else {
@@ -88,8 +88,8 @@ export async function connectWallet(page: Page): Promise<void> {
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
-    await popup.locator("[data-testid='signature-request-scroll-button']").click();
-    await popup.locator("[data-testid='page-container-footer-next']").click();
+    await popup.getByTestId("signature-request-scroll-button").click();
+    await popup.getByTestId("page-container-footer-next").click();
 };
 
 export async function openMenuToCreate(page: Page, element: string) {
