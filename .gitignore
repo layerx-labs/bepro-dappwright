@@ -23,4 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 packege-lock.json
-test-results/*.png
+test-results/
