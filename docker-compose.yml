@@ -1,0 +1,10 @@
+version: '3'
+services:
+  tester:
+    image: mcr.microsoft.com/playwright:v1.41.2-jammy
+    container_name: playwright
+    command: >
+      bash -c "npm install && npx playwright install && xvfb-run --auto-servernum npm run test"
+    environment:
+      CHAIN_ID: ${CHAIN_ID}
+      MNEMONIC: test test test test test test test test test test test junk
