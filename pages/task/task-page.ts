@@ -1,7 +1,8 @@
-import Locators from "../locators";
+import Locators from "pages/locators";
 import { Page, expect } from "@playwright/test";
-import { openMenuToCreate, getRandomInt, wait, customApprove, customConfirmTransaction } from "../../single-test/custom-helper"
+import { openMenuToCreate, getRandomInt, wait, customApprove, customConfirmTransaction } from "tests/single-test/custom-helper";
 import { faker } from '@faker-js/faker';
+
 export default class TaskPage extends Locators {
     link = 'https://afrodite.bepro.network';
 

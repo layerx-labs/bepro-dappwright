@@ -1,6 +1,6 @@
-import Locators from "../locators";
+import Locators from "pages/locators";
 import { Page, expect } from "@playwright/test";
-import { openSettingsPage, tryToChangeParameters, wait } from "../../single-test/custom-helper"
+import { openSettingsPage, tryToChangeParameters, wait } from "tests/single-test/custom-helper"
 
 export default class RegistryPage extends Locators {
 

@@ -1,8 +1,7 @@
-import Locators from "../locators";
+import Locators from "pages/locators";
 import { faker } from '@faker-js/faker';
 import { Page, expect } from "@playwright/test";
-import { openMenuToCreate, getRandomInt, wait, createDescription, customApprove, customConfirmTransaction, customSign } from "../../single-test/custom-helper"
-import { Dappwright } from "@tenkeylabs/dappwright";
+import { openMenuToCreate, wait, createDescription, customApprove, customConfirmTransaction, customSign } from "tests/single-test/custom-helper"
 
 export default class MarketplacePage extends Locators {
     createMarketplaceName() {

@@ -1,8 +1,7 @@
-import Locators from "../locators";
+import Locators from "pages/locators";
 import { Page, expect } from "@playwright/test";
-import { openMenuToCreate, getClipBoard, wait, customApprove, customConfirmTransaction } from "../../single-test/custom-helper"
-import { environment } from "../../../network-config";
-import { faker } from '@faker-js/faker';
+import { getClipBoard, wait, customApprove, customConfirmTransaction } from "tests/single-test/custom-helper";
+import { environment } from "network-config";
 
 export default class VotingPowerPage extends Locators {
 
