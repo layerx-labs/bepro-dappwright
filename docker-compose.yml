@@ -4,4 +4,4 @@ services:
     image: mcr.microsoft.com/playwright:v1.41.2-jammy
     container_name: playwright
     command: >
-      bash -c "npm install && npx playwright install && xvfb-run --auto-servernum npm run test"
+      bash -c "npm install && npx playwright install chromium && xvfb-run --auto-servernum npm run test"

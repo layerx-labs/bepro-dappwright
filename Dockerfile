@@ -5,5 +5,5 @@ COPY package*.json ./
 COPY . .
 
 RUN npm install --no-audit
-RUN npx playwright install
+RUN npx playwright install chromium
 RUN xvfb-run --auto-servernum npm run test
