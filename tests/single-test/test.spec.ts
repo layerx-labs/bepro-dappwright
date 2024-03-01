@@ -24,7 +24,7 @@ export const test = baseTest.extend<{
       wallet: "metamask",
       version: MetaMaskWallet.recommendedVersion,
       seed: "test test test test test test test test test test test junk",
-      headless: true,
+      headless: false,
     });
 
     await wallet.addNetwork({

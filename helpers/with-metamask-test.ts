@@ -13,7 +13,7 @@ export function withMetaMaskTest() {
         wallet: "metamask",
         version: MetaMaskWallet.recommendedVersion,
         seed: "test test test test test test test test test test test junk",
-        headless: true,
+        headless: false,
       });
 
       await wallet.addNetwork({
