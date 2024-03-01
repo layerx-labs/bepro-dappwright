@@ -4,8 +4,9 @@ import { Dappwright } from "@tenkeylabs/dappwright";
 import { withMetaMaskTest } from "helpers/with-metamask-test";
 import { environment } from "network-config";
 
-import { ConnectWalletButton, RKMetaMask } from "locators/auth";
 import { AvatarOrIdenticon } from "locators/common";
+import { connectMetaMask } from "actions/auth/connect-metamask";
+import { ConnectWalletButton, RKMetaMask } from "actions/auth/locators";
 
 let context: BrowserContext;
 let wallet: Dappwright;
@@ -26,8 +27,7 @@ test.afterEach(async () => {
 });
 
 test("Should signin sucessfully", async () => {
-  await page.locator(ConnectWalletButton).click();
-  await page.locator(RKMetaMask).click();
+  await connectMetaMask(page);
   await wallet.signin();
   await expect(page.locator(AvatarOrIdenticon)).toBeVisible();
   await expect(page.locator(ConnectWalletButton)).not.toBeVisible();
@@ -35,8 +35,7 @@ test("Should signin sucessfully", async () => {
 });
 
 test("Should not signin because user rejected", async () => {
-  await page.locator(ConnectWalletButton).click();
-  await page.locator(RKMetaMask).click();
+  await connectMetaMask(page);
   await wallet.reject();
   await expect(page.locator(ConnectWalletButton)).toBeVisible();
   await expect(page.locator(AvatarOrIdenticon)).not.toBeVisible();
