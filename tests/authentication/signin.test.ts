@@ -1,34 +1,44 @@
-import { expect } from "@playwright/test";
+import { BrowserContext, Page, expect, test } from "@playwright/test";
+import { Dappwright } from "@tenkeylabs/dappwright";
 
 import { withMetaMaskTest } from "helpers/with-metamask-test";
 import { environment } from "network-config";
-import { wait } from "utils/wait";
 
-const metaMaskSignInTest = withMetaMaskTest();
+import { ConnectWalletButton, RKMetaMask } from "locators/auth";
+import { AvatarOrIdenticon } from "locators/common";
 
-metaMaskSignInTest.beforeEach(async ({ page }) => {
+let context: BrowserContext;
+let wallet: Dappwright;
+let page: Page;
+
+test.beforeEach(async () => {
+  const bootstrap = await withMetaMaskTest();
+
+  context = bootstrap.context;
+  wallet = bootstrap.wallet;
+  page = bootstrap.page;
+  
   await page.goto(environment.BASE_URL);
 });
 
-metaMaskSignInTest.afterEach(async ({ context }) => {
-  await wait(2000);
+test.afterEach(async () => {
   await context.close();
 });
 
-metaMaskSignInTest("Should signin sucessfully", async ({ page, wallet }) => {
-  await page.locator('[data-testid="connect-wallet-button"]').click();
-  await page.locator('[data-testid="rk-wallet-option-io.metamask"]').click();
+test("Should signin sucessfully", async () => {
+  await page.locator(ConnectWalletButton).click();
+  await page.locator(RKMetaMask).click();
   await wallet.signin();
-  await expect(page.locator('[data-testid="avatar-or-identicon"]')).toBeVisible();
-  await expect(page.locator('[data-testid="connect-wallet-button"]')).not.toBeVisible();
-  await expect(page.locator('[data-testid="rk-wallet-option-io.metamask"]')).not.toBeVisible();
+  await expect(page.locator(AvatarOrIdenticon)).toBeVisible();
+  await expect(page.locator(ConnectWalletButton)).not.toBeVisible();
+  await expect(page.locator(RKMetaMask)).not.toBeVisible();
 });
 
-metaMaskSignInTest("Should not signin because user rejected", async ({ page, wallet }) => {
-  await page.locator('[data-testid="connect-wallet-button"]').click();
-  await page.locator('[data-testid="rk-wallet-option-io.metamask"]').click();
+test("Should not signin because user rejected", async () => {
+  await page.locator(ConnectWalletButton).click();
+  await page.locator(RKMetaMask).click();
   await wallet.reject();
-  await expect(page.locator('[data-testid="connect-wallet-button"]')).toBeVisible();
-  await expect(page.locator('[data-testid="avatar-or-identicon"]')).not.toBeVisible();
-  await expect(page.locator('[data-testid="rk-wallet-option-io.metamask"]')).toBeVisible();
+  await expect(page.locator(ConnectWalletButton)).toBeVisible();
+  await expect(page.locator(AvatarOrIdenticon)).not.toBeVisible();
+  await expect(page.locator(RKMetaMask)).toBeVisible();
 });
