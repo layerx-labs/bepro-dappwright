@@ -2,20 +2,12 @@ import { Page } from "@playwright/test";
 import { Dappwright } from "@tenkeylabs/dappwright";
 import Locators from "pages/locators";
 import { faker } from '@faker-js/faker';
+import { connectMetaMask } from "actions/auth/connect-metamask";
 const locators = new Locators();
 
-export async function firstSignIn(page: Page): Promise<void> {
-    await page.getByTestId("connect-wallet-button").click();
-    await page.getByTestId("rk-wallet-option-io.metamask").click();
-    const popup = await page.context().waitForEvent('page');
-    await popup.waitForLoadState();
-    await popup.bringToFront();
-    await popup.locator('input[type="checkbox"]').first().check();
-    await popup.getByTestId("page-container-footer-next").click();
-    await popup.waitForLoadState();
-    await popup.getByTestId("page-container-footer-next").click();
-    await popup.locator(".request-signature__body").scrollIntoViewIfNeeded();
-    await popup.getByTestId("page-container-footer-next").click();
+export async function firstSignIn(page: Page, wallet: Dappwright): Promise<void> {
+    await connectMetaMask(page);
+    await wallet.signin();
     await page.locator(locators.commonPageLocator.btnAcceptCookies).click();
     await page.getByTestId(locators.explorePageLocator.btnExplore).click();
 }

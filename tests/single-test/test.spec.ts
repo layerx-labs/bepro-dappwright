@@ -28,7 +28,7 @@ test.beforeAll(async () => {
   page = bootstrap.page;
 
   await page.goto(environment.BASE_URL);
-  await firstSignIn(page);
+  await firstSignIn(page, wallet);
 });
 
 test.afterAll(async () => {
