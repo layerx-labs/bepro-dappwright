@@ -1,0 +1,1 @@
+export const AvatarOrIdenticon = '[data-testid="avatar-or-identicon"]';
