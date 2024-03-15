@@ -10,5 +10,6 @@ export const environment = {
     PRIVATE_KEY_CREATE_NETWORK: process.env.PRIVATE_KEY_CREATE_NETWORK !== undefined ? process.env.PRIVATE_KEY_CREATE_NETWORK : 'PrivateKeyCreateNetwork',
     BASE_URL: process.env.BASE_URL || 'http://localhost:3000/',
     WALLET_ADDRESS: process.env.WALLET_ADDRESS !== undefined ? process.env.WALLET_ADDRESS : '0x000000000000',
+    WALLET_ADDRESS_CREATE_NETWORK: process.env.WALLET_ADDRESS_CREATE_NETWORK !== undefined ? process.env.WALLET_ADDRESS_CREATE_NETWORK : '0x000000000000',
     HEADLESS: (process.env.HEADLESS ?? "true") === "true"
 }

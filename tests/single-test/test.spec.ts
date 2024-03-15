@@ -1,5 +1,5 @@
 import { test, expect, BrowserContext, Page } from "@playwright/test";
-import { openSettingsPage, getRandomInt, getRandomFloat } from "./custom-helper";
+import { openSettingsPage, getRandomInt, getRandomFloat, wait } from "./custom-helper";
 import { firstSignIn, switchAccountAndConnect } from "./custom-helper";
 import { environment } from "network-config";
 import Locators from "pages/locators";
@@ -8,6 +8,7 @@ import MarketplacePage from "pages/marketplace/marketplace-page";
 import { VotingPowerPage, GovernancePage, RegistryPage } from "pages/profile";
 import { withMetaMaskTest } from "helpers/with-metamask-test";
 import { Dappwright } from "@tenkeylabs/dappwright";
+import { MINUTE } from "utils/constants";
 
 const taskPage = new TaskPage();
 const marketplacePage = new MarketplacePage();
@@ -25,10 +26,10 @@ test.beforeAll(async () => {
 
   context = bootstrap.context;
   wallet = bootstrap.wallet;
-  page = bootstrap.page;
+  page = await context.newPage();
 
   await page.goto(environment.BASE_URL);
-  await firstSignIn(page, wallet);
+  await firstSignIn(page);
 });
 
 test.afterAll(async () => {
@@ -125,15 +126,13 @@ test("should be able to create a funding request with reward sucessfully", async
 });
 
 test('should be able to create a marketplace sucessfully', async () => {
-  await registryPage.setMarketplaceCreationAmount(page);
-  await registryPage.setMarketplaceCreationFee(page);
-  await switchAccountAndConnect(page, wallet, 4);
+  await switchAccountAndConnect(page, environment.WALLET_ADDRESS);
   await marketplacePage.createMarketplace(page);
-  await expect(page.getByTestId(locators.marketplacePageLocator.btnCreateOne)).toBeVisible({ timeout: 60000 });
+  await expect(page.getByTestId(locators.marketplacePageLocator.btnCreateOne)).toBeVisible({ timeout: MINUTE });
 });
 
 test('should be able to close a marketplace sucessfully', async () => {
-  await switchAccountAndConnect(page, wallet, 4);
+  await switchAccountAndConnect(page, environment.WALLET_ADDRESS);
   await marketplacePage.closeMarketplace(page);
   await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 30000 });
 });
