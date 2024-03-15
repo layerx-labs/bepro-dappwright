@@ -2,6 +2,7 @@ import Locators from "pages/locators";
 import { faker } from '@faker-js/faker';
 import { Page, expect } from "@playwright/test";
 import { openMenuToCreate, wait, createDescription, customApprove, customConfirmTransaction, customSign } from "tests/single-test/custom-helper"
+import path from "path"
 
 export default class MarketplacePage extends Locators {
     createMarketplaceName() {
@@ -28,7 +29,7 @@ export default class MarketplacePage extends Locators {
         }
         await page.getByTestId(this.marketplacePageLocator.btnLockTBeproNextStep).click();
 
-        const absolutPath = new URL('../../fixtures/', import.meta.url).pathname;
+        const absolutPath = `${path.resolve('./')}/fixtures`;
         await page.getByTestId(this.marketplacePageLocator.logoIcon).setInputFiles(`${absolutPath}/Bepro-ico.svg`);
         await page.getByTestId(this.marketplacePageLocator.fullLogo).setInputFiles(`${absolutPath}/Bepro-logo.svg`);
         await page.getByTestId(this.marketplacePageLocator.inputMarketplaceName).fill(this.createMarketplaceName());
@@ -47,10 +48,7 @@ export default class MarketplacePage extends Locators {
 
         await page.getByTestId(this.marketplacePageLocator.btnCreateMarketplace).click();
 
-
-        // //all confirmation to create network 
         await customSign(page, false);
-        await customConfirmTransaction(page, false);
         await customConfirmTransaction(page, false);
         await customConfirmTransaction(page, false);
         await customConfirmTransaction(page, false);
