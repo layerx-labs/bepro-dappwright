@@ -56,6 +56,7 @@ test('should change return Governor and Registry options to default successfully
 test("should be able to create a task sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 120);
+  await governancePage.setDisputeTime(page, 60);
   await taskPage.createTask(page);
   await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 30000 });
   await taskPage.changeTaskTags(page);
