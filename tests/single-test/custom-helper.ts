@@ -84,12 +84,8 @@ export async function customApprove(page: Page, waitForTransaction: boolean = tr
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
-    if (await popup.locator(".token-allowance-container").count()) {
-        console.log("found token-allowance-container")
+    if (await popup.locator(".token-allowance-container").count())
         await popup.locator(".token-allowance-container").scrollIntoViewIfNeeded();
-    } else {
-        console.log("not found token-allowance-container")
-    }
     await popup.getByTestId("page-container-footer-next").click();
     await wait(1000);
     await popup.getByTestId("page-container-footer-next").click();
