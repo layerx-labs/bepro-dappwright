@@ -150,7 +150,7 @@ test('should unlock votes successfully', async () => {
   await expect(currentAmount).toBe(previousAmount - unlockAmount);
 });
 
-test.only('should delegate votes successfully', async () => {
+test('should delegate votes successfully', async () => {
   const delegateAmount = 5;
   await openSettingsPage(page, locators.commonPageLocator.btnVotingPowerProfileMenu);
   await votingPowerPage.delegateVotes(page, delegateAmount);
