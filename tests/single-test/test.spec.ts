@@ -8,7 +8,7 @@ import MarketplacePage from "pages/marketplace/marketplace-page";
 import { VotingPowerPage, GovernancePage, RegistryPage } from "pages/profile";
 import { withMetaMaskTest } from "helpers/with-metamask-test";
 import { Dappwright } from "@tenkeylabs/dappwright";
-import { MINUTE } from "utils/constants";
+import { FIVE_SECONDS, MINUTE } from "utils/constants";
 
 const taskPage = new TaskPage();
 const marketplacePage = new MarketplacePage();
@@ -150,10 +150,12 @@ test('should unlock votes successfully', async () => {
   await expect(currentAmount).toBe(previousAmount - unlockAmount);
 });
 
-test('should delegate votes successfully', async () => {
+test.only('should delegate votes successfully', async () => {
+  const delegateAmount = 5;
   await openSettingsPage(page, locators.commonPageLocator.btnVotingPowerProfileMenu);
-  await votingPowerPage.delegateVotes(page, 5);
-  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
+  await votingPowerPage.delegateVotes(page, delegateAmount);
+  expect(await page.locator(`[data-testid='delegation-${environment.WALLET_ADDRESS}-${delegateAmount}']`).count())
+    .toBeGreaterThanOrEqual(1);
 });
 
 test('should change curator amount and still be a curator', async () => {

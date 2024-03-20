@@ -14,11 +14,11 @@ export default class VotingPowerPage extends Locators {
         await page.locator(this.commonPageLocator.classOptionDropdown).getByText(networkName).click();
     }
 
-    async delegateVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = 'Mumbai') {
+    async delegateVotes(page: Page, votes = 2, toAddress = environment.WALLET_ADDRESS, marketplaceName = 'bepro', networkName = 'Mumbai') {
         await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName)
         await this.checkValue(page);
         await page.getByTestId(this.managementPageLocator.inputDelegateVotesAmount).fill(`${votes}`);
-        await page.getByTestId(this.managementPageLocator.inputDelegateVotesAddress).fill(`${environment.WALLET_ADDRESS}`);
+        await page.getByTestId(this.managementPageLocator.inputDelegateVotesAddress).fill(`${toAddress}`);
         await page.getByTestId(this.managementPageLocator.btnDelegateVotes).click();
         await customConfirmTransaction(page);
     }
