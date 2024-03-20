@@ -139,8 +139,10 @@ test('should be able to close a marketplace sucessfully', async () => {
 });
 
 test('should lock voting succesfully', async () => {
+  const lockAmount = 1000;
   await openSettingsPage(page, locators.commonPageLocator.btnVotingPowerProfileMenu);
-  await votingPowerPage.lockVotes(page, 1000);
+  const { previousAmount, currentAmount } = await votingPowerPage.lockVotes(page, lockAmount);
+  await expect(currentAmount).toBe(previousAmount - lockAmount);
 });
 
 test('should unlock votes successfully', async () => {
