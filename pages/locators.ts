@@ -135,7 +135,7 @@ export default class Locators {
         oraclesActionsLoadingBalance: "oracle-actions-loading-balance",
         inputSelectMarketplace: "Select Marketplace",
         inputSelectNetwork:"Select Network",
-        inputBeproAmountToLock: "TBEPRO Amount",
+        inputBeproAmountToLock: "oracle-actions-input",
         btnGetVotes: "get-votes-btn",
         inputBeproVotesAmountToUnlock: "oracle-actions-input",
         btnGetVotesUnlock: "[data-testid='get-votes-btn']",

@@ -25,14 +25,27 @@ export default class VotingPowerPage extends Locators {
 
     async lockVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = 'Mumbai') {
         await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName)
-        console.log('locking votes');
+        await wait(FIVE_SECONDS);
         await this.checkValue(page);
+        await page.getByTestId(this.managementPageLocator.oraclesActionsMax).click();
+        await wait(FIVE_SECONDS);
+        const previousAmount = 
+            await page.getByTestId(this.managementPageLocator.inputBeproVotesAmountToUnlock).inputValue();
         await page.getByTestId(this.managementPageLocator.inputBeproAmountToLock).fill(`${votes}`);
+        await wait(TWO_SECONDS);
         await page.getByTestId(this.commonPageLocator.btnApproveLock).click();
         await customApprove(page);
         await page.getByTestId(this.managementPageLocator.btnGetVotes).click();
         await page.getByTestId(this.managementPageLocator.modalConfirmGetVotes).click();
         await customConfirmTransaction(page);
+        await page.getByTestId(this.managementPageLocator.oraclesActionsMax).click();
+        await wait(FIVE_SECONDS);
+        const currentAmount = 
+            await page.getByTestId(this.managementPageLocator.inputBeproVotesAmountToUnlock).inputValue();
+        return { 
+            previousAmount: parseFloat(previousAmount.replaceAll(",", "")), 
+            currentAmount: parseFloat(currentAmount.replaceAll(",", "")), 
+        };
     }
 
     async unlockVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = 'Mumbai') {
