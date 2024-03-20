@@ -53,8 +53,8 @@ export default class VotingPowerPage extends Locators {
         const currentAmount = 
             await page.getByTestId(this.managementPageLocator.inputBeproVotesAmountToUnlock).inputValue();
         return { 
-            previousAmount: parseFloat(previousAmount.replace(",", "")), 
-            currentAmount: parseFloat(currentAmount.replace(",", "")), 
+            previousAmount: parseFloat(previousAmount.replaceAll(",", "")), 
+            currentAmount: parseFloat(currentAmount.replaceAll(",", "")), 
         };
     }
 
