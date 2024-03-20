@@ -144,8 +144,10 @@ test('should lock voting succesfully', async () => {
 });
 
 test('should unlock votes successfully', async () => {
+  const unlockAmount = 1000;
   await openSettingsPage(page, locators.commonPageLocator.btnVotingPowerProfileMenu);
-  await votingPowerPage.unlockVotes(page, 1000);
+  const { previousAmount, currentAmount } = await votingPowerPage.unlockVotes(page, unlockAmount);
+  await expect(currentAmount).toBe(previousAmount - unlockAmount);
 });
 
 test('should delegate votes successfully', async () => {
