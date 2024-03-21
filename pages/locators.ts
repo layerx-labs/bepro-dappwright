@@ -94,6 +94,8 @@ export default class Locators {
         placeholderProposal: 'Select...',
         dropdownOptionProposal: '.react-select__option',
         componentProposalstatus: '#root-container > div.container-xl > div > div > div.mt-3.row.justify-content-between > div:nth-child(2) > div',
+        proposalItemRow: 'proposal-item-row',
+        deliverableItemRow: 'deliverable-item-row'
     }
 
 
@@ -222,4 +224,7 @@ export default class Locators {
         btnWriting: "category-button-writing",
     }
 
+    proposalPageLocator = {
+        proposalState: 'proposal-state'
+    }
 }
