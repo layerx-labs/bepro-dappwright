@@ -99,7 +99,7 @@ test("should be able to cancel a task sucessfully", async () => {
   await governancePage.setDraftTime(page, 120);
   await taskPage.createTask(page);
   await taskPage.cancelTask(page);
-  await expect(page.getByText('Canceled')).toBeVisible({ timeout: 20000 });
+  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('canceled',{ timeout: 20000 });
   await governancePage.setDraftTime(page);
 });
 
