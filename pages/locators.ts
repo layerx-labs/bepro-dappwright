@@ -227,4 +227,8 @@ export default class Locators {
     proposalPageLocator = {
         proposalState: 'proposal-state'
     }
+
+    deliverablePageLocator = {
+        deliverableState: "deliverable-state"
+    }
 }

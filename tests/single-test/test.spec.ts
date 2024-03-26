@@ -8,7 +8,7 @@ import MarketplacePage from "pages/marketplace/marketplace-page";
 import { VotingPowerPage, GovernancePage, RegistryPage } from "pages/profile";
 import { withMetaMaskTest } from "helpers/with-metamask-test";
 import { Dappwright } from "@tenkeylabs/dappwright";
-import { FIVE_SECONDS, MINUTE, TWO_SECONDS } from "utils/constants";
+import { MINUTE, TWO_SECONDS } from "utils/constants";
 
 const taskPage = new TaskPage();
 const marketplacePage = new MarketplacePage();
@@ -79,7 +79,7 @@ test("should be able to cancel a deliverable sucessfully", async () => {
   await taskPage.createDeliverable(page);
   await taskPage.cancelDeliverable(page);
   await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
-  expect(await page.getByText('Canceled').first().textContent()).toContain('Canceled');
+  expect(await page.getByTestId(locators.deliverablePageLocator.deliverableState).first()).toHaveText('Canceled');
 });
 
 test.only("should be able to dispute a proposal sucessfully", async () => {
