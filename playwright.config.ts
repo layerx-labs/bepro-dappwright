@@ -5,6 +5,7 @@ export default defineConfig({
   use: {
     permissions: ['clipboard-read', 'clipboard-write'],
     screenshot: 'only-on-failure',
+    video: 'on'
   },
   fullyParallel: false,
   webServer: [
