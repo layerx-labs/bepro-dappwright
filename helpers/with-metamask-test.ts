@@ -3,7 +3,7 @@ import dappwright, { MetaMaskWallet } from "@tenkeylabs/dappwright";
 import { environment } from "network-config";
 
 export async function withMetaMaskTest() {
-  const [wallet, page, context] = await dappwright.bootstrap("", {
+  const [wallet, page, context] = await dappwright.bootstrap("chromium", {
     wallet: "metamask",
     version: MetaMaskWallet.recommendedVersion,
     seed: "test test test test test test test test test test test junk",
