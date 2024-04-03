@@ -26,7 +26,7 @@ test.afterEach(async () => {
   await context.close();
 });
 
-test("Should signin sucessfully", async () => {
+test.only("Should signin sucessfully", async () => {
   await connectMetaMask(page);
   await wallet.signin();
   await expect(page.locator(AvatarOrIdenticon)).toBeVisible();
