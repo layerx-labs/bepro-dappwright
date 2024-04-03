@@ -7,6 +7,7 @@ import { environment } from "network-config";
 import { AvatarOrIdenticon } from "locators/common";
 import { connectMetaMask } from "actions/auth/connect-metamask";
 import { ConnectWalletButton, RKMetaMask } from "actions/auth/locators";
+import { wait } from "utils/wait";
 
 let context: BrowserContext;
 let wallet: Dappwright;
@@ -28,6 +29,8 @@ test.beforeEach(async () => {
   });
 
   await page.goto(environment.BASE_URL);
+  console.log("Waiting 10s for page load")
+  await wait(10000);
 });
 
 test.afterEach(async () => {
