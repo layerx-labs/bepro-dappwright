@@ -18,7 +18,15 @@ test.beforeEach(async () => {
   context = bootstrap.context;
   wallet = bootstrap.wallet;
   page = bootstrap.page;
-  
+
+  await page.route("https://verify.walletconnect.org/bc2288336095f20ebf8653a1ab670566", async route => {
+    await route.fulfill()
+  });
+
+  await page.route("https://verify.walletconnect.com/bc2288336095f20ebf8653a1ab670566", async route => {
+    await route.fulfill()
+  });
+
   await page.goto(environment.BASE_URL);
 });
 
