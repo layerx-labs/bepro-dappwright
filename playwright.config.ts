@@ -4,7 +4,7 @@ export default defineConfig({
   workers: 1,
   use: {
     permissions: ['clipboard-read', 'clipboard-write'],
-    screenshot: 'only-on-failure',
+    screenshot: 'on',
     video: 'on'
   },
   fullyParallel: false,
