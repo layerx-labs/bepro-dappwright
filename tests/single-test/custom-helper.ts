@@ -165,17 +165,13 @@ export async function getRandomFloat(min: number, max: number): Promise<number> 
 };
 
 export async function tryToChangeParameters(page: Page, configToChange: string, valueToChange: number, saveButton: string) {
-
     if (await page.getByTestId(configToChange).inputValue() == '0' || await page.getByTestId(configToChange).inputValue() == '') {
-        console.log('value: 0');
         await wait(1000);
         await tryToChangeParameters(page, configToChange, valueToChange, saveButton)
     } else if (await page.getByTestId(configToChange).inputValue() == await formatValue(valueToChange)) {
-        console.log('No need to change the value');
         await page.getByTestId(locators.managementPageLocator.tabLogoAndColors).click();
         return;
     } else if (await page.getByTestId(configToChange).inputValue() != `${valueToChange}` && await page.getByTestId(configToChange).inputValue() != '0') {
-        console.log('changing value to : ', valueToChange);
         await page.getByTestId(configToChange).fill(`${valueToChange}`);
         await page.getByTestId(saveButton).first().click();
         await customConfirmTransaction(page);

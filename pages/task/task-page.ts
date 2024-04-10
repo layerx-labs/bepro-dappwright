@@ -21,7 +21,6 @@ export default class TaskPage extends Locators {
     }
 
     async selectMarketplace(page: Page) {
-        // Clica no item com texto "bepro" dentro do dropdown
         await page.getByText(this.elementText.btnBepro).click();
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
     }
@@ -59,8 +58,6 @@ export default class TaskPage extends Locators {
     }
 
     async createTask(page: Page) {
-        console.log('Creating task...');
-
         await this.fillTaskFirstPage(page);
         await this.fillTaskValue(page);
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
@@ -71,7 +68,6 @@ export default class TaskPage extends Locators {
     }
 
     async changeTaskTags(page: Page) {
-        console.log('Changing task tags...');
         await page.getByTestId(this.taskPageLocator.taskStatus).isVisible();
         await wait(5000);
         await page.getByTestId(this.taskPageLocator.btnTaskEdit).click();
@@ -89,8 +85,6 @@ export default class TaskPage extends Locators {
     }
 
     async changeTaskValue(page: Page) {
-        console.log('Changing task value...');
-
         await page.getByTestId(this.taskPageLocator.btnTaskUpdateAmount).click();
         await wait(2500);
         await page.getByTestId(this.taskPageLocator.inputSetReward).clear();
@@ -102,7 +96,6 @@ export default class TaskPage extends Locators {
     }
 
     async createFundingRequest(page: Page) {
-        console.log('creating funding request');
         await this.fillTaskFirstPage(page);
         await page.getByTestId(this.taskPageLocator.btnSeekFundingCreateTask).click();
         const value = this.createTaskValue();
@@ -115,7 +108,6 @@ export default class TaskPage extends Locators {
     }
 
     async fundIt(page: Page){
-        console.log('funding task');
         await wait(2000);
         await page.getByText('Fund Task').click();
         await wait(1000);
@@ -144,7 +136,6 @@ export default class TaskPage extends Locators {
     }
 
     async changeTaskDescription(page: Page) {
-        console.log('Changing task description...');
         await wait(1000);
         await page.getByTestId(this.taskPageLocator.btnTaskEdit).click();
         await wait(1000);
@@ -155,7 +146,6 @@ export default class TaskPage extends Locators {
         await expect(page.getByText(this.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
     }
     async cancelTask(page: Page) {
-        console.log('Canceling task');        
         await expect(page.getByTestId(this.taskPageLocator.taskStatus)).toBeVisible({ timeout: 20000 });
         await page.reload()
         await wait(4000);
@@ -168,17 +158,14 @@ export default class TaskPage extends Locators {
     async waitTaskChangeStatusToOpen(page: Page) {
         await wait(10000);
         let status = await page.getByTestId(this.taskPageLocator.taskStatus).innerText();
-        console.log('status: ', status);
         if (status === 'Draft' || status === 'Funding') {
             await page.reload();
             await this.waitTaskChangeStatusToOpen(page);
         } else {
-            console.log('Task status: ', status);
         }
     }
 
     async createDeliverable(page: Page) {
-        console.log('Creating deliverable...');
         await this.waitTaskChangeStatusToOpen(page);
         await wait(2000);
         await page.getByTestId(this.taskPageLocator.btnTaskStartWorking).click();
@@ -199,7 +186,6 @@ export default class TaskPage extends Locators {
     }
 
     async cancelDeliverable(page: Page) {
-        console.log('Canceling deliverable...');
         await page.getByTestId('actions.review').click();
         await wait(1000);
         await page.locator('button.border').click();
@@ -209,7 +195,6 @@ export default class TaskPage extends Locators {
     }
 
     async createProposal(page: Page) {
-        console.log('Creating proposal...');
         await page.getByTestId(this.taskPageLocator.btnCreateProposal).click();
         await page.locator(this.taskPageLocator.dropdownProposal).click();
         const option = await page.$(this.taskPageLocator.dropdownOptionProposal);
@@ -219,7 +204,6 @@ export default class TaskPage extends Locators {
     }
 
     async acceptProposal(page: Page) {
-        console.log('Accepting proposal...');
         await page.getByTestId(this.taskPageLocator.btnViewProposal).nth(1).click();
         await wait(4000);
         await this.checkProposalStatus(page);
@@ -230,14 +214,12 @@ export default class TaskPage extends Locators {
     }
 
     async disputeProposal(page: Page) {
-        console.log('Disputing proposal...');
         await wait(4000);
         await page.getByTestId(this.taskPageLocator.btnViewProposal).nth(1).click();
         await page.getByTestId(this.taskPageLocator.btnDisputeProposal).click();
         await customConfirmTransaction(page);
     }
     async withdraw(page: Page){
-        console.log('withdrawing');
         await wait(1000);
         await page.locator('button.align-items-center.not-svg > svg').click();
         await wait(1000);
@@ -248,18 +230,13 @@ export default class TaskPage extends Locators {
         await wait(1000);
         await page.locator('div.modal div.align-items-center span').click();
         await customConfirmTransaction(page);
-
     }
 
     async checkProposalStatus(page: Page) {
         await page.reload();
         await wait(10000);
         if (!await page.getByTestId(this.taskPageLocator.btnAcceptProposal).last().isVisible()) {
-            console.log('Accept button not visible');
             await this.checkProposalStatus(page);
-        }
-        else {
-            console.log('Accept button visible');
         }
     }
 

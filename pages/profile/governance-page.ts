@@ -5,10 +5,8 @@ import { openSettingsPage, tryToChangeParameters, wait } from "tests/single-test
 export default class GovernancePage extends Locators {
 
     async setGovernorSettings(page: Page, configToChange: string, valueToChange: number, saveButton: string, reload = true) {
-        console.log('Changing settings');
         const span = await page.waitForSelector('span:text("Governance")', { timeout: 10000 }).catch(() => null)
         if (!span) {
-            console.log('marketplace options page not opened');
             await openSettingsPage(page, this.commonPageLocator.btnCustomMarketplaceProfileMenu);
         }
         await page.getByTestId(this.managementPageLocator.tabGovernance).click();

@@ -7,7 +7,6 @@ import { FIVE_SECONDS, TWO_SECONDS } from "utils/constants";
 export default class VotingPowerPage extends Locators {
 
     async selectMarketplaceAndNetwork(page: Page, marketplaceName = 'bepro', networkName = 'Mumbai') {
-        console.log('selecting Marketplace and Network');
         await page.getByText(this.managementPageLocator.inputSelectMarketplace).click();
         await page.locator(this.commonPageLocator.classOptionDropdown).getByText(marketplaceName).click();
         await page.getByText(this.managementPageLocator.inputSelectNetwork).click();
@@ -73,7 +72,6 @@ export default class VotingPowerPage extends Locators {
 
     async unlockAllVotes(page: Page, marketplaceName = 'bepro', networkName = 'Mumbai') {
         await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName)
-        console.log('unlocking all votes');
         await page.getByTestId(this.managementPageLocator.tabUnlock).click();
         await page.locator('div.mt-4 > div > div > div:nth-of-type(1) div.my-2 > span').click();
         await page.getByTestId(this.managementPageLocator.btnGetVotes).click();
@@ -84,18 +82,14 @@ export default class VotingPowerPage extends Locators {
     async checkValue(page: Page) {
         const beproAvailable = await page.getByText('TBEPRO Available').textContent();
         if (beproAvailable?.includes('0 TBEPRO Available')) {
-            console.log(beproAvailable);
-            
             await wait(2000);
             this.checkValue(page);
         } else {
-            console.log('Page loaded');
             await wait(1000);
         }
     }
 
     async checkCuratorStatus(page: Page) {
-        console.log('checking curator status');
         await page.getByTestId(this.commonPageLocator.btnSettings).first().click();
         await page.getByTestId(this.managementPageLocator.btnCopyAddress).click();
         await page.getByTestId(this.commonPageLocator.btnMarketPlaces).click();
@@ -104,7 +98,6 @@ export default class VotingPowerPage extends Locators {
         await wait(2000);
         await page.getByTestId(this.curatorsPageLocator.inputSearchBar).fill(await getClipBoard(page));
         await expect(page.locator('div.p-3')).toHaveCount(1);
-        console.log('curator status ok');
     }
 
 }
