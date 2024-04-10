@@ -8,6 +8,7 @@ import { AvatarOrIdenticon } from "locators/common";
 import { connectMetaMask } from "actions/auth/connect-metamask";
 import { ConnectWalletButton, RKMetaMask } from "actions/auth/locators";
 import { wait } from "utils/wait";
+import { customSignin } from "../single-test/custom-helper";
 
 let context: BrowserContext;
 let wallet: Dappwright;
@@ -39,7 +40,7 @@ test.afterEach(async () => {
 
 test.only("Should signin sucessfully", async () => {
   await connectMetaMask(page);
-  await wallet.signin();
+  await customSignin(page, environment.WALLET_ADDRESS_CREATE_NETWORK);
   await expect(page.locator(AvatarOrIdenticon)).toBeVisible();
   await expect(page.locator(ConnectWalletButton)).not.toBeVisible();
   await expect(page.locator(RKMetaMask)).not.toBeVisible();
