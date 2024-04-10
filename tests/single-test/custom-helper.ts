@@ -80,7 +80,6 @@ export async function customSign(page: Page, waitForTransaction: boolean = true)
 };
 
 export async function customApprove(page: Page, waitForTransaction: boolean = true): Promise<void> {
-    console.log('Approving');
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
@@ -100,7 +99,6 @@ export async function customApprove(page: Page, waitForTransaction: boolean = tr
 }
 
 export async function customConfirmTransaction(page: Page, waitForTransaction: boolean = true): Promise<void> {
-    console.log('Confirming');
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
@@ -195,15 +193,12 @@ export async function checkApproveDone(page: Page): Promise<boolean> {
     const approve = await page.waitForSelector('button:text("approve")', { timeout: 5000 }).catch(() => null);
     const botaoApprove = await page.waitForSelector('button:text("Approve")', { timeout: 5000 }).catch(() => null);
     if (botaoApprove) {
-        console.log('Approve found');
         await botaoApprove.click();
         return true;
     } else if (approve) {
-        console.log('approve found');
         await approve.click();
         return true;
     } else {
-        console.log('Approve not found');
         return false;
     }
 }
