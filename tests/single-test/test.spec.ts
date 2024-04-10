@@ -41,11 +41,11 @@ test.beforeEach(async () => {
 });
 
 test('should change return Governor and Registry options to default successfully', async () => {
-  await governancePage.setDisputeTime(page);
-  await governancePage.setPercentageForDispute(page);
-  await governancePage.setDraftTime(page);
-  await governancePage.setCuratorAmount(page);
-  await governancePage.setMergerFee(page);
+  await governancePage.setDisputeTime(page, undefined, false);
+  await governancePage.setPercentageForDispute(page, undefined, false);
+  await governancePage.setDraftTime(page), undefined, false;
+  await governancePage.setCuratorAmount(page, undefined, false);
+  await governancePage.setMergerFee(page, undefined, false);
   await governancePage.setProposalCreatorFee(page);
   await registryPage.setCancelFee(page);
   await registryPage.setCloseFee(page);
