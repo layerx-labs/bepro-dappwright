@@ -4,8 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "test": "playwright test -c playwright.config.ts tests",
-    "test-auth": "playwright test -c playwright.config.ts tests/authentication"
+    "test": "playwright test -c playwright.config.ts tests"
   },
   "dependencies": {
     "@faker-js/faker": "^8.3.1",

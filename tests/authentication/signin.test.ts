@@ -7,8 +7,7 @@ import { environment } from "network-config";
 import { AvatarOrIdenticon } from "locators/common";
 import { connectMetaMask } from "actions/auth/connect-metamask";
 import { ConnectWalletButton, RKMetaMask } from "actions/auth/locators";
-import { wait } from "utils/wait";
-import { customSignin } from "../single-test/custom-helper";
+import { customSignin } from "tests/single-test/custom-helper";
 
 let context: BrowserContext;
 let wallet: Dappwright;
@@ -21,24 +20,14 @@ test.beforeEach(async () => {
   wallet = bootstrap.wallet;
   page = bootstrap.page;
 
-  await page.route("https://verify.walletconnect.org/bc2288336095f20ebf8653a1ab670566", async route => {
-    await route.fulfill()
-  });
-
-  await page.route("https://verify.walletconnect.com/bc2288336095f20ebf8653a1ab670566", async route => {
-    await route.fulfill()
-  });
-
   await page.goto(environment.BASE_URL);
-  console.log("Waiting 10s for page load")
-  await wait(10000);
 });
 
 test.afterEach(async () => {
   await context.close();
 });
 
-test.only("Should signin sucessfully", async () => {
+test("Should signin sucessfully", async () => {
   await connectMetaMask(page);
   await customSignin(page, environment.WALLET_ADDRESS_CREATE_NETWORK);
   await expect(page.locator(AvatarOrIdenticon)).toBeVisible();
