@@ -47,9 +47,9 @@ test('should change return Governor and Registry options to default successfully
   await governancePage.setCuratorAmount(page, undefined, false);
   await governancePage.setMergerFee(page, undefined, false);
   await governancePage.setProposalCreatorFee(page);
-  await registryPage.setCancelFee(page);
-  await registryPage.setCloseFee(page);
-  await registryPage.setMarketplaceCreationFee(page);
+  await registryPage.setCancelFee(page, undefined, false);
+  await registryPage.setCloseFee(page, undefined, false);
+  await registryPage.setMarketplaceCreationFee(page, undefined, false);
   await registryPage.setMarketplaceCreationAmount(page);
 });
 
@@ -58,18 +58,17 @@ test("should be able to create a task sucessfully", async () => {
   await governancePage.setDraftTime(page, 120);
   await governancePage.setDisputeTime(page, 60);
   await taskPage.createTask(page);
-  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 30000 });
+  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 10000 });
   await taskPage.changeTaskTags(page);
-  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
+  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 10000 });
   await taskPage.changeTaskDescription(page);
-  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
+  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 10000 });
   await taskPage.changeTaskValue(page);
-  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
+  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 10000 });
   await taskPage.createDeliverable(page);
   await taskPage.createProposal(page);
   await taskPage.acceptProposal(page);
-  await expect(page.getByText(locators.elementText.textAccepted).first()).toBeVisible({ timeout: 20000 });
-  await governancePage.setDraftTime(page);
+  await expect(page.getByText(locators.elementText.textAccepted).first()).toBeVisible({ timeout: 10000 });
 });
 
 test("should be able to cancel a deliverable sucessfully", async () => {
