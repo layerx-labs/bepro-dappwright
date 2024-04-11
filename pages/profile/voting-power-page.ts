@@ -32,8 +32,10 @@ export default class VotingPowerPage extends Locators {
             await page.getByTestId(this.managementPageLocator.inputBeproVotesAmountToUnlock).inputValue();
         await page.getByTestId(this.managementPageLocator.inputBeproAmountToLock).fill(`${votes}`);
         await wait(TWO_SECONDS);
-        await page.getByTestId(this.commonPageLocator.btnApproveLock).click();
-        await customApprove(page);
+        if (!await page.getByTestId(this.commonPageLocator.btnApproveLock).isDisabled()) {
+            await page.getByTestId(this.commonPageLocator.btnApproveLock).click();
+            await customApprove(page);
+        }
         await page.getByTestId(this.managementPageLocator.btnGetVotes).click();
         await page.getByTestId(this.managementPageLocator.modalConfirmGetVotes).click();
         await customConfirmTransaction(page);

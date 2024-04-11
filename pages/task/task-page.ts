@@ -110,8 +110,8 @@ export default class TaskPage extends Locators {
     async fundIt(page: Page){
         await wait(2000);
         await page.getByText('Fund Task').click();
-        await wait(1000);
-        await page.locator('span.input-group-text').click();
+        await wait(2000);
+        await page.getByText('Max', { exact: true }).click();
         await page.getByText('Approve').click();
         await customApprove(page);
         await wait(4000); 
@@ -128,9 +128,11 @@ export default class TaskPage extends Locators {
         await page.getByTestId(this.taskPageLocator.switchSetFundersReward).click();
         await page.getByTestId(this.taskPageLocator.inputFundersReward).fill(`${value}`);
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
-        await page.getByTestId(this.taskPageLocator.btnApproveCreateTask).click();
-
-        await customApprove(page);
+        await wait(1000);
+        if (await page.getByTestId(this.taskPageLocator.btnApproveCreateTask).isVisible()) {
+            await page.getByTestId(this.taskPageLocator.btnApproveCreateTask).click();
+            await customApprove(page);
+        }
         await page.getByTestId(this.taskPageLocator.btnCreateTask).click();
         await customConfirmTransaction(page);
     }

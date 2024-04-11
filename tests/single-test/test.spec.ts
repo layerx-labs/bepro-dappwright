@@ -26,7 +26,7 @@ test.beforeAll(async () => {
 
   context = bootstrap.context;
   wallet = bootstrap.wallet;
-  page = await context.newPage();
+  page = bootstrap.page;
 
   await page.goto(environment.BASE_URL);
   await firstSignIn(page);
@@ -107,6 +107,8 @@ test("should be able to cancel a task sucessfully", async () => {
 
 test("should be able to create a funding request sucessfully", async () => {
   test.setTimeout(600000);
+  await governancePage.setDraftTime(page, 120);
+  await governancePage.setDisputeTime(page, 60);
   await taskPage.createFundingRequest(page);
   await taskPage.fundIt(page);
   await taskPage.createDeliverable(page);
@@ -118,6 +120,8 @@ test("should be able to create a funding request sucessfully", async () => {
 
 test("should be able to create a funding request with reward sucessfully", async () => {
   test.setTimeout(600000);
+  await governancePage.setDraftTime(page, 120);
+  await governancePage.setDisputeTime(page, 60);
   await taskPage.createFundingRequestWithReward(page);
   await taskPage.fundIt(page);
   await taskPage.createDeliverable(page);
