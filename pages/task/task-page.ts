@@ -63,7 +63,7 @@ export default class TaskPage extends Locators {
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
         await page.getByTestId(this.taskPageLocator.btnApproveCreateTask).click();
         await customApprove(page);
-        await page.getByTestId(this.taskPageLocator.btnCreateTask).click({ timeout: 200000 });
+        await page.getByTestId(this.taskPageLocator.btnCreateTask).click({ timeout: 50000 });
         await customConfirmTransaction(page);
     }
 
