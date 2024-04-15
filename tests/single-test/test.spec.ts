@@ -55,7 +55,7 @@ test('should delegate votes successfully', async () => {
   const delegateAmount = 5;
   await openSettingsPage(page, locators.commonPageLocator.btnVotingPowerProfileMenu);
   await votingPowerPage.delegateVotes(page, delegateAmount);
-  expect(await page.locator(`[data-testid='delegation-${environment.WALLET_ADDRESS}-${delegateAmount}']`).count())
+  expect(await page.locator(`[data-testid='delegation-${environment.WALLET_ADDRESS_CREATE_NETWORK}-${delegateAmount}']`).count())
     .toBeGreaterThanOrEqual(1);
 });
 
