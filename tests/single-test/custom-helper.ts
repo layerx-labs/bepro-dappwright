@@ -43,7 +43,7 @@ export const customSignin = async (page: Page, address: string): Promise<void> =
     });
   };
 
-export async function signIn(page: Page, address: string = environment.WALLET_ADDRESS_CREATE_NETWORK): Promise<void> {
+export async function signIn(page: Page, address: string = environment.WALLET_ADDRESS): Promise<void> {
     await connectMetaMask(page);
     await customSignin(page, address);
 }

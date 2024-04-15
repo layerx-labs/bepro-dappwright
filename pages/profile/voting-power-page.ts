@@ -6,14 +6,14 @@ import { FIVE_SECONDS, TWO_SECONDS } from "utils/constants";
 
 export default class VotingPowerPage extends Locators {
 
-    async selectMarketplaceAndNetwork(page: Page, marketplaceName = 'bepro', networkName = 'Mumbai') {
+    async selectMarketplaceAndNetwork(page: Page, marketplaceName = 'bepro', networkName = environment.NETWORK_NAME) {
         await page.getByText(this.managementPageLocator.inputSelectMarketplace).click();
         await page.locator(this.commonPageLocator.classOptionDropdown).getByText(marketplaceName).click();
         await page.getByText(this.managementPageLocator.inputSelectNetwork).click();
         await page.locator(this.commonPageLocator.classOptionDropdown).getByText(networkName).click();
     }
 
-    async delegateVotes(page: Page, votes = 2, toAddress = environment.WALLET_ADDRESS, marketplaceName = 'bepro', networkName = 'Mumbai') {
+    async delegateVotes(page: Page, votes = 2, toAddress = environment.WALLET_ADDRESS, marketplaceName = 'bepro', networkName = environment.NETWORK_NAME) {
         await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName)
         await this.checkValue(page);
         await page.getByTestId(this.managementPageLocator.inputDelegateVotesAmount).fill(`${votes}`);
@@ -22,7 +22,7 @@ export default class VotingPowerPage extends Locators {
         await customConfirmTransaction(page);
     }
 
-    async lockVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = 'Mumbai') {
+    async lockVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = environment.NETWORK_NAME) {
         await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName)
         await wait(FIVE_SECONDS);
         await this.checkValue(page);
@@ -49,7 +49,7 @@ export default class VotingPowerPage extends Locators {
         };
     }
 
-    async unlockVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = 'Mumbai') {
+    async unlockVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = environment.NETWORK_NAME) {
         await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName);
         await wait(FIVE_SECONDS);
         await page.getByTestId(this.managementPageLocator.tabUnlock).click();
@@ -72,7 +72,7 @@ export default class VotingPowerPage extends Locators {
         };
     }
 
-    async unlockAllVotes(page: Page, marketplaceName = 'bepro', networkName = 'Mumbai') {
+    async unlockAllVotes(page: Page, marketplaceName = 'bepro', networkName = environment.NETWORK_NAME) {
         await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName)
         await page.getByTestId(this.managementPageLocator.tabUnlock).click();
         await page.locator('div.mt-4 > div > div > div:nth-of-type(1) div.my-2 > span').click();

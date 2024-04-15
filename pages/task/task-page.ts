@@ -61,8 +61,11 @@ export default class TaskPage extends Locators {
         await this.fillTaskFirstPage(page);
         await this.fillTaskValue(page);
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
-        await page.getByTestId(this.taskPageLocator.btnApproveCreateTask).click();
-        await customApprove(page);
+        await wait(1000);
+        if (await page.getByTestId(this.taskPageLocator.btnApproveCreateTask).isVisible()) {
+            await page.getByTestId(this.taskPageLocator.btnApproveCreateTask).click();
+            await customApprove(page);
+        }
         await page.getByTestId(this.taskPageLocator.btnCreateTask).click({ timeout: 50000 });
         await customConfirmTransaction(page);
     }
@@ -210,7 +213,7 @@ export default class TaskPage extends Locators {
         await wait(4000);
         await this.checkProposalStatus(page);
         await wait(1000);
-        await page.getByTestId(this.taskPageLocator.btnAcceptProposal).nth(1).click();
+        await page.getByTestId(this.taskPageLocator.btnAcceptProposal).last().click();
         await page.getByTestId(this.taskPageLocator.btnConfirmDistribution).click();
         await customConfirmTransaction(page);
     }
@@ -236,7 +239,7 @@ export default class TaskPage extends Locators {
 
     async checkProposalStatus(page: Page) {
         await page.reload();
-        await wait(10000);
+        await wait(5000);
         if (!await page.getByTestId(this.taskPageLocator.btnAcceptProposal).last().isVisible()) {
             await this.checkProposalStatus(page);
         }

@@ -29,7 +29,7 @@ test.afterEach(async () => {
 
 test("Should signin sucessfully", async () => {
   await connectMetaMask(page);
-  await customSignin(page, environment.WALLET_ADDRESS_CREATE_NETWORK);
+  await customSignin(page, environment.WALLET_ADDRESS);
   await expect(page.locator(AvatarOrIdenticon)).toBeVisible();
   await expect(page.locator(ConnectWalletButton)).not.toBeVisible();
   await expect(page.locator(RKMetaMask)).not.toBeVisible();
