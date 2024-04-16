@@ -171,6 +171,7 @@ export async function tryToChangeParameters(page: Page, configToChange: string, 
         return;
     } else if (await page.getByTestId(configToChange).inputValue() != `${valueToChange}` && await page.getByTestId(configToChange).inputValue() != '0') {
         await page.getByTestId(configToChange).fill(`${valueToChange}`);
+        await wait(2000);
         await page.getByTestId(saveButton).first().click();
         await customConfirmTransaction(page);
         return;

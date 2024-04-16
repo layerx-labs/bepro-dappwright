@@ -184,6 +184,7 @@ export default class TaskPage extends Locators {
         await page.getByTestId(this.taskPageLocator.btnConfirmCreateDeliverable).click();
 
         await customConfirmTransaction(page);
+        await wait(3000);
         await page.getByTestId(this.taskPageLocator.btnMarkAsReady).click();
 
         await customConfirmTransaction(page);
