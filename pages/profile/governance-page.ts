@@ -9,8 +9,8 @@ export default class GovernancePage extends Locators {
         if (!span) {
             await openSettingsPage(page, this.commonPageLocator.btnCustomMarketplaceProfileMenu);
         }
+        await wait(5000);
         await page.getByTestId(this.managementPageLocator.tabGovernance).click();
-        await wait(2000);
         await tryToChangeParameters(page, configToChange, valueToChange, saveButton);
         await page.waitForFunction(() => !document.querySelector('.spinner-border'), { timeout: 60000 });
         expect(await page.$$('.spinner-border')).toHaveLength(0);
