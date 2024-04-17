@@ -73,13 +73,13 @@ test.only("should be able to create a task sucessfully", async () => {
   await governancePage.setDraftTime(page, 120);
   await governancePage.setDisputeTime(page, 60);
   await taskPage.createTask(page);
-  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 10000 });
+  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 5000 });
   await taskPage.changeTaskTags(page);
-  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 5000 });
   await taskPage.changeTaskDescription(page);
-  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 5000 });
   await taskPage.changeTaskValue(page);
-  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 5000 });
   await taskPage.createDeliverable(page);
   await taskPage.createProposal(page);
   await taskPage.acceptProposal(page);
