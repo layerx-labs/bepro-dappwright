@@ -96,7 +96,7 @@ test("should be able to cancel a deliverable sucessfully", async () => {
   expect(await page.getByTestId(locators.deliverablePageLocator.deliverableState).first()).toHaveText('Canceled', { timeout: 5000 });
 });
 
-test("should be able to dispute a proposal sucessfully", async () => {
+test.only("should be able to dispute a proposal sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 60);
   await governancePage.setDisputeTime(page, 120);
