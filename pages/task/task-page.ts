@@ -92,6 +92,7 @@ export default class TaskPage extends Locators {
         await wait(2500);
         await page.getByTestId(this.taskPageLocator.inputSetReward).clear();
         await page.getByTestId(this.taskPageLocator.inputSetReward).fill('1001');
+        await wait(2000);
         await page.getByTestId(this.taskPageLocator.btnTaskUpdateAmountApprove).click();
         await customApprove(page);
         await page.getByTestId(this.taskPageLocator.btnTaskUpdateAmountConfirm).click();
