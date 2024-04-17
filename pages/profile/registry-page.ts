@@ -8,6 +8,7 @@ export default class RegistryPage extends Locators {
         const span = await page.waitForSelector('span:text("Registry")', { timeout: 10000 }).catch(() => null)
         if (!span) {
             await openSettingsPage(page, this.commonPageLocator.btnCustomMarketplaceProfileMenu);
+            await wait(3000);
         }
         await page.getByTestId(this.managementPageLocator.tabRegistry).click();
         await tryToChangeParameters(page, configToChange, valueToChange, saveButton);

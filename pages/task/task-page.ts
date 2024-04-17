@@ -55,6 +55,7 @@ export default class TaskPage extends Locators {
         const taskOptions = [this.taskPageLocator.btnDesignCreateTask, this.taskPageLocator.btnOtherCreateTask, this.taskPageLocator.btnCodeCreateTask];
         await page.getByTestId(taskOptions[await getRandomInt(0, 2)]).click();
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
+        await wait(5000);
     }
 
     async createTask(page: Page) {
