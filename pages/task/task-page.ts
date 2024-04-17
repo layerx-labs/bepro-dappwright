@@ -47,6 +47,7 @@ export default class TaskPage extends Locators {
 
     async fillTaskFirstPage(page: Page) {
         await openMenuToCreate(page, this.commonPageLocator.btnLaunchInOpenMarketplace);
+        await wait(5000);
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
 
         await this.fillTaskTitle(page);
