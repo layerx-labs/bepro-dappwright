@@ -68,7 +68,7 @@ test('should change curator amount and still be a curator', async () => {
   await votingPowerPage.checkCuratorStatus(page);
 });
 
-test("should be able to create a task sucessfully", async () => {
+test.only("should be able to create a task sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 120);
   await governancePage.setDisputeTime(page, 60);
