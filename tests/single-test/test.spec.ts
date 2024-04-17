@@ -109,14 +109,14 @@ test("should be able to dispute a proposal sucessfully", async () => {
   expect(await page.getByTestId(locators.proposalPageLocator.proposalState).first()).toHaveText('Failed', { timeout: 5000 });
 });
 
-test.skip("should be able to cancel a task sucessfully", async () => {
+test("should be able to cancel a task sucessfully", async () => {
   await governancePage.setDraftTime(page, 120);
   await taskPage.createTask(page);
   await taskPage.cancelTask(page);
   await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('canceled',{ timeout: 20000 });
 });
 
-test.skip("should be able to create a funding request sucessfully", async () => {
+test("should be able to create a funding request sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 120);
   await governancePage.setDisputeTime(page, 60);
@@ -129,7 +129,7 @@ test.skip("should be able to create a funding request sucessfully", async () => 
 
 });
 
-test.skip("should be able to create a funding request with reward sucessfully", async () => {
+test("should be able to create a funding request with reward sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 120);
   await governancePage.setDisputeTime(page, 60);
@@ -143,7 +143,7 @@ test.skip("should be able to create a funding request with reward sucessfully", 
   await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
 });
 
-test.skip('should change Governor options successfully', async () => {
+test('should change Governor options successfully', async () => {
   test.setTimeout(600000);
   await governancePage.setDisputeTime(page, await getRandomInt(60, 1728000));
   await governancePage.setPercentageForDispute(page, await getRandomInt(1, 51));
@@ -153,14 +153,14 @@ test.skip('should change Governor options successfully', async () => {
   await governancePage.setProposalCreatorFee(page, await getRandomInt(0, 10));
 });
 
-test.skip('should change registry options successfully', async () => {
+test('should change registry options successfully', async () => {
   await registryPage.setCancelFee(page, await getRandomInt(0, 100));
   await registryPage.setCloseFee(page, await getRandomInt(0, 90));
   await registryPage.setMarketplaceCreationFee(page, await getRandomInt(0, 99));
   await registryPage.setMarketplaceCreationAmount(page, await getRandomInt(0, 50000));
 });
 
-test.skip('should be able to create a marketplace sucessfully', async () => {
+test('should be able to create a marketplace sucessfully', async () => {
   await registryPage.setMarketplaceCreationAmount(page);
   await switchAccountAndConnect(page, environment.WALLET_ADDRESS_CREATE_NETWORK);
   await marketplacePage.createMarketplace(page);
@@ -168,7 +168,7 @@ test.skip('should be able to create a marketplace sucessfully', async () => {
   await expect(page.getByTestId(locators.marketplacePageLocator.btnCreateOne)).toBeVisible({ timeout: MINUTE });
 });
 
-test.skip('should be able to close a marketplace sucessfully', async () => {
+test('should be able to close a marketplace sucessfully', async () => {
   await switchAccountAndConnect(page, environment.WALLET_ADDRESS_CREATE_NETWORK);
   await marketplacePage.closeMarketplace(page);
   await wait(20000);
