@@ -9,7 +9,6 @@ export default class RegistryPage extends Locators {
         if (!span) {
             await openSettingsPage(page, this.commonPageLocator.btnCustomMarketplaceProfileMenu);
         }
-        await wait(2000);
         await page.getByTestId(this.managementPageLocator.tabRegistry).click();
         await tryToChangeParameters(page, configToChange, valueToChange, saveButton);
         await page.waitForFunction(() => !document.querySelector('.spinner-border'), { timeout: 10000 });
