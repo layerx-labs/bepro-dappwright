@@ -1,5 +1,5 @@
 import { test, expect, BrowserContext, Page } from "@playwright/test";
-import { openSettingsPage, getRandomInt, getRandomFloat, wait } from "./custom-helper";
+import { openSettingsPage, getRandomInt, wait } from "./custom-helper";
 import { firstSignIn, switchAccountAndConnect } from "./custom-helper";
 import { environment } from "network-config";
 import Locators from "pages/locators";
@@ -68,6 +68,13 @@ test('should change curator amount and still be a curator', async () => {
   await votingPowerPage.checkCuratorStatus(page);
 });
 
+test("should be able to cancel a task sucessfully", async () => {
+  await governancePage.setDraftTime(page, 120);
+  await taskPage.createTask(page);
+  await taskPage.cancelTask(page);
+  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('canceled',{ timeout: 20000 });
+});
+
 test("should be able to create a task sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 120);
@@ -84,36 +91,6 @@ test("should be able to create a task sucessfully", async () => {
   await taskPage.createProposal(page);
   await taskPage.acceptProposal(page);
   await expect(page.getByText(locators.elementText.textAccepted).first()).toBeVisible({ timeout: 10000 });
-});
-
-test("should be able to cancel a deliverable sucessfully", async () => {
-  test.setTimeout(600000);
-  await taskPage.createTask(page);
-  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 30000 });
-  await taskPage.createDeliverable(page);
-  await taskPage.cancelDeliverable(page);
-  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
-  expect(await page.getByTestId(locators.deliverablePageLocator.deliverableState).first()).toHaveText('Canceled', { timeout: 5000 });
-});
-
-test("should be able to dispute a proposal sucessfully", async () => {
-  test.setTimeout(600000);
-  await governancePage.setDraftTime(page, 60);
-  await governancePage.setDisputeTime(page, 120);
-  await taskPage.createTask(page);
-  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 30000 });
-  await taskPage.createDeliverable(page);
-  await taskPage.createProposal(page);
-  await taskPage.disputeProposal(page);
-  await wait(3 * FIVE_SECONDS);
-  expect(await page.getByTestId(locators.proposalPageLocator.proposalState).first()).toHaveText('Failed', { timeout: 5000 });
-});
-
-test("should be able to cancel a task sucessfully", async () => {
-  await governancePage.setDraftTime(page, 120);
-  await taskPage.createTask(page);
-  await taskPage.cancelTask(page);
-  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('canceled',{ timeout: 20000 });
 });
 
 test("should be able to create a funding request sucessfully", async () => {
@@ -141,6 +118,29 @@ test("should be able to create a funding request with reward sucessfully", async
   await expect(page.getByText(locators.elementText.textAccepted).first()).toBeVisible({ timeout: 20000 });
   await taskPage.withdraw(page);
   await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
+});
+
+test("should be able to cancel a deliverable sucessfully", async () => {
+  test.setTimeout(600000);
+  await taskPage.createTask(page);
+  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 30000 });
+  await taskPage.createDeliverable(page);
+  await taskPage.cancelDeliverable(page);
+  await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
+  expect(await page.getByTestId(locators.deliverablePageLocator.deliverableState).first()).toHaveText('Canceled', { timeout: 5000 });
+});
+
+test("should be able to dispute a proposal sucessfully", async () => {
+  test.setTimeout(600000);
+  await governancePage.setDraftTime(page, 60);
+  await governancePage.setDisputeTime(page, 120);
+  await taskPage.createTask(page);
+  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 30000 });
+  await taskPage.createDeliverable(page);
+  await taskPage.createProposal(page);
+  await taskPage.disputeProposal(page);
+  await wait(3 * FIVE_SECONDS);
+  expect(await page.getByTestId(locators.proposalPageLocator.proposalState).first()).toHaveText('Failed', { timeout: 5000 });
 });
 
 test('should change Governor options successfully', async () => {
