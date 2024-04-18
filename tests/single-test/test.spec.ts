@@ -37,7 +37,7 @@ test.beforeEach(async () => {
   await page.goto(environment.BASE_URL);
 });
 
-test.only('should change Governor options successfully', async () => {
+test('should change Governor options successfully', async () => {
   test.setTimeout(600000);
   await governancePage.setDisputeTime(page, await getRandomInt(60, 1728000));
   await governancePage.setPercentageForDispute(page, await getRandomInt(1, 51));
