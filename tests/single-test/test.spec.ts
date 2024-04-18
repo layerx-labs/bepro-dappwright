@@ -85,14 +85,7 @@ test('should change curator amount and still be a curator', async () => {
   await votingPowerPage.checkCuratorStatus(page);
 });
 
-test("should be able to cancel a task sucessfully", async () => {
-  await governancePage.setDraftTime(page, 120);
-  await taskPage.createTask(page);
-  await taskPage.cancelTask(page);
-  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('canceled',{ timeout: 20000 });
-});
-
-test("should be able to create a task sucessfully", async () => {
+test.only("should be able to create a task sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 120);
   await governancePage.setDisputeTime(page, 60);
@@ -108,6 +101,13 @@ test("should be able to create a task sucessfully", async () => {
   await taskPage.createProposal(page);
   await taskPage.acceptProposal(page);
   await expect(page.getByText(locators.elementText.textAccepted).first()).toBeVisible({ timeout: 10000 });
+});
+
+test("should be able to cancel a task sucessfully", async () => {
+  await governancePage.setDraftTime(page, 120);
+  await taskPage.createTask(page);
+  await taskPage.cancelTask(page);
+  await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('canceled',{ timeout: 20000 });
 });
 
 test("should be able to create a funding request sucessfully", async () => {
