@@ -2,6 +2,7 @@ import Locators from "pages/locators";
 import { Page, expect } from "@playwright/test";
 import { openMenuToCreate, getRandomInt, wait, customApprove, customConfirmTransaction } from "tests/single-test/custom-helper";
 import { faker } from '@faker-js/faker';
+import { environment } from "../../network-config";
 
 export default class TaskPage extends Locators {
     link = 'https://afrodite.bepro.network';
@@ -47,7 +48,10 @@ export default class TaskPage extends Locators {
 
     async fillTaskFirstPage(page: Page) {
         await openMenuToCreate(page, this.commonPageLocator.btnLaunchInOpenMarketplace);
-        await wait(5000);
+        await wait(3000);
+        await page.getByText("Select Network").last().click();
+        await page.locator(`.react-select__option:has-text("${environment.NETWORK_NAME}")`).click();
+        await wait(3000);
         await page.getByTestId(this.taskPageLocator.btnNextCreateTask).click();
 
         await this.fillTaskTitle(page);
