@@ -37,23 +37,6 @@ test.beforeEach(async () => {
   await page.goto(environment.BASE_URL);
 });
 
-test('should change Governor options successfully', async () => {
-  test.setTimeout(600000);
-  await governancePage.setDisputeTime(page, await getRandomInt(60, 1728000));
-  await governancePage.setPercentageForDispute(page, await getRandomInt(1, 51));
-  await governancePage.setDraftTime(page, await getRandomInt(60, 1728000));
-  await governancePage.setCuratorAmount(page, await getRandomInt(1, 10000));
-  await governancePage.setMergerFee(page, await getRandomInt(0, 10));
-  await governancePage.setProposalCreatorFee(page, await getRandomInt(0, 10));
-});
-
-test('should change registry options successfully', async () => {
-  await registryPage.setCancelFee(page, await getRandomInt(0, 100));
-  await registryPage.setCloseFee(page, await getRandomInt(0, 90));
-  await registryPage.setMarketplaceCreationFee(page, await getRandomInt(0, 99));
-  await registryPage.setMarketplaceCreationAmount(page, await getRandomInt(0, 50000));
-});
-
 test('should lock voting succesfully', async () => {
   const lockAmount = 1000;
   await openSettingsPage(page, locators.commonPageLocator.btnVotingPowerProfileMenu);
@@ -85,7 +68,7 @@ test('should change curator amount and still be a curator', async () => {
   await votingPowerPage.checkCuratorStatus(page);
 });
 
-test.only("should be able to create a task sucessfully", async () => {
+test("should be able to create a task sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 120);
   await governancePage.setDisputeTime(page, 60);
@@ -158,6 +141,23 @@ test("should be able to dispute a proposal sucessfully", async () => {
   await taskPage.disputeProposal(page);
   await wait(3 * FIVE_SECONDS);
   expect(await page.getByTestId(locators.proposalPageLocator.proposalState).first()).toHaveText('Failed', { timeout: 5000 });
+});
+
+test('should change Governor options successfully', async () => {
+  test.setTimeout(600000);
+  await governancePage.setDisputeTime(page, await getRandomInt(60, 1728000));
+  await governancePage.setPercentageForDispute(page, await getRandomInt(1, 51));
+  await governancePage.setDraftTime(page, await getRandomInt(60, 1728000));
+  await governancePage.setCuratorAmount(page, await getRandomInt(1, 10000));
+  await governancePage.setMergerFee(page, await getRandomInt(0, 10));
+  await governancePage.setProposalCreatorFee(page, await getRandomInt(0, 10));
+});
+
+test('should change registry options successfully', async () => {
+  await registryPage.setCancelFee(page, await getRandomInt(0, 100));
+  await registryPage.setCloseFee(page, await getRandomInt(0, 90));
+  await registryPage.setMarketplaceCreationFee(page, await getRandomInt(0, 99));
+  await registryPage.setMarketplaceCreationAmount(page, await getRandomInt(0, 50000));
 });
 
 test('should be able to create a marketplace sucessfully', async () => {
