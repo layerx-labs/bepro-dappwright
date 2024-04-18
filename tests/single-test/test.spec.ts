@@ -19,7 +19,7 @@ const locators = new Locators();
 let context: BrowserContext;
 let page: Page;
 
-test.beforeAll(async () => {
+test.beforeEach(async () => {
   const bootstrap = await withMetaMaskTest();
 
   context = bootstrap.context;
@@ -29,13 +29,13 @@ test.beforeAll(async () => {
   await firstSignIn(page);
 });
 
-test.afterAll(async () => {
+test.afterEach(async () => {
   await context.close();
 });
 
-test.beforeEach(async () => {
-  await page.goto(environment.BASE_URL);
-});
+// test.beforeEach(async () => {
+//   await page.goto(environment.BASE_URL);
+// });
 
 test('should lock voting succesfully', async () => {
   const lockAmount = 1000;
@@ -93,7 +93,7 @@ test("should be able to cancel a task sucessfully", async () => {
   await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('canceled',{ timeout: 20000 });
 });
 
-test("should be able to create a funding request sucessfully", async () => {
+test.only("should be able to create a funding request sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 120);
   await governancePage.setDisputeTime(page, 60);
