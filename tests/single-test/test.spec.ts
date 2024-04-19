@@ -61,7 +61,6 @@ test.only('should change curator amount and still be a curator', async () => {
   await votingPowerPage.lockVotes(page, 100);
   await page.goto(environment.BASE_URL);
   await page.reload();
-  await page.getByTestId(locators.commonPageLocator.btnCustomMarketplaceProfileMenu).first().click();
   await governancePage.setCuratorAmount(page, 80);
   await votingPowerPage.checkCuratorStatus(page);
 });
