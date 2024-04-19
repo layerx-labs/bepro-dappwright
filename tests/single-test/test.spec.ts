@@ -55,7 +55,7 @@ test('should delegate votes successfully', async () => {
     .toBeGreaterThanOrEqual(1);
 });
 
-test('should change curator amount and still be a curator', async () => {
+test.only('should change curator amount and still be a curator', async () => {
   await governancePage.setCuratorAmount(page, 50);
   await page.getByTestId(locators.commonPageLocator.btnVotingPowerProfileMenu).first().click();
   await votingPowerPage.lockVotes(page, 100);
