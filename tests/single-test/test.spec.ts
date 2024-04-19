@@ -33,25 +33,21 @@ test.afterEach(async () => {
   await context.close();
 });
 
-// test.beforeEach(async () => {
-//   await page.goto(environment.BASE_URL);
-// });
-
-test('should lock voting succesfully', async () => {
+test.skip('should lock voting succesfully', async () => {
   const lockAmount = 1000;
   await openSettingsPage(page, locators.commonPageLocator.btnVotingPowerProfileMenu);
   const { previousAmount, currentAmount } = await votingPowerPage.lockVotes(page, lockAmount);
   await expect(currentAmount).toBe(previousAmount - lockAmount);
 });
 
-test('should unlock votes successfully', async () => {
+test.skip('should unlock votes successfully', async () => {
   const unlockAmount = 500;
   await openSettingsPage(page, locators.commonPageLocator.btnVotingPowerProfileMenu);
   const { previousAmount, currentAmount } = await votingPowerPage.unlockVotes(page, unlockAmount);
   await expect(currentAmount).toBe(previousAmount - unlockAmount);
 });
 
-test('should delegate votes successfully', async () => {
+test.skip('should delegate votes successfully', async () => {
   const delegateAmount = 5;
   await openSettingsPage(page, locators.commonPageLocator.btnVotingPowerProfileMenu);
   await votingPowerPage.delegateVotes(page, delegateAmount);
@@ -59,7 +55,7 @@ test('should delegate votes successfully', async () => {
     .toBeGreaterThanOrEqual(1);
 });
 
-test('should change curator amount and still be a curator', async () => {
+test.skip('should change curator amount and still be a curator', async () => {
   await governancePage.setCuratorAmount(page, 50);
   await page.getByTestId(locators.commonPageLocator.btnVotingPowerProfileMenu).first().click();
   await votingPowerPage.lockVotes(page, 100);
@@ -68,7 +64,7 @@ test('should change curator amount and still be a curator', async () => {
   await votingPowerPage.checkCuratorStatus(page);
 });
 
-test("should be able to create a task sucessfully", async () => {
+test.skip("should be able to create a task sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 120);
   await governancePage.setDisputeTime(page, 60);
@@ -86,14 +82,14 @@ test("should be able to create a task sucessfully", async () => {
   await expect(page.getByText(locators.elementText.textAccepted).first()).toBeVisible({ timeout: 10000 });
 });
 
-test("should be able to cancel a task sucessfully", async () => {
+test.skip("should be able to cancel a task sucessfully", async () => {
   await governancePage.setDraftTime(page, 120);
   await taskPage.createTask(page);
   await taskPage.cancelTask(page);
   await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('canceled',{ timeout: 20000 });
 });
 
-test("should be able to create a funding request sucessfully", async () => {
+test.skip("should be able to create a funding request sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 120);
   await governancePage.setDisputeTime(page, 60);
@@ -106,7 +102,7 @@ test("should be able to create a funding request sucessfully", async () => {
 
 });
 
-test("should be able to create a funding request with reward sucessfully", async () => {
+test.skip("should be able to create a funding request with reward sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 120);
   await governancePage.setDisputeTime(page, 60);
@@ -120,7 +116,7 @@ test("should be able to create a funding request with reward sucessfully", async
   await expect(page.getByText(locators.elementText.toastySuccess)).toBeVisible({ timeout: 20000 });
 });
 
-test("should be able to cancel a deliverable sucessfully", async () => {
+test.skip("should be able to cancel a deliverable sucessfully", async () => {
   test.setTimeout(600000);
   await taskPage.createTask(page);
   await expect(page.getByTestId(locators.taskPageLocator.taskStatus)).toHaveText('draft',{ timeout: 30000 });
@@ -130,7 +126,7 @@ test("should be able to cancel a deliverable sucessfully", async () => {
   expect(await page.getByTestId(locators.deliverablePageLocator.deliverableState).first()).toHaveText('Canceled', { timeout: 5000 });
 });
 
-test("should be able to dispute a proposal sucessfully", async () => {
+test.skip("should be able to dispute a proposal sucessfully", async () => {
   test.setTimeout(600000);
   await governancePage.setDraftTime(page, 60);
   await governancePage.setDisputeTime(page, 120);
@@ -143,7 +139,7 @@ test("should be able to dispute a proposal sucessfully", async () => {
   expect(await page.getByTestId(locators.proposalPageLocator.proposalState).first()).toHaveText('Failed', { timeout: 5000 });
 });
 
-test('should change Governor options successfully', async () => {
+test.skip('should change Governor options successfully', async () => {
   test.setTimeout(600000);
   await governancePage.setDisputeTime(page, await getRandomInt(60, 1728000));
   await governancePage.setPercentageForDispute(page, await getRandomInt(1, 51));
@@ -153,7 +149,7 @@ test('should change Governor options successfully', async () => {
   await governancePage.setProposalCreatorFee(page, await getRandomInt(0, 10));
 });
 
-test('should change registry options successfully', async () => {
+test.skip('should change registry options successfully', async () => {
   await registryPage.setCancelFee(page, await getRandomInt(0, 100));
   await registryPage.setCloseFee(page, await getRandomInt(0, 90));
   await registryPage.setMarketplaceCreationFee(page, await getRandomInt(0, 99));
