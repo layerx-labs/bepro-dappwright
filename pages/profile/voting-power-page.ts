@@ -6,15 +6,14 @@ import { FIVE_SECONDS, TWO_SECONDS } from "utils/constants";
 
 export default class VotingPowerPage extends Locators {
 
-    async selectMarketplaceAndNetwork(page: Page, marketplaceName = 'bepro', networkName = 'Mumbai') {
-        console.log('selecting Marketplace and Network');
+    async selectMarketplaceAndNetwork(page: Page, marketplaceName = 'bepro', networkName = environment.NETWORK_NAME) {
         await page.getByText(this.managementPageLocator.inputSelectMarketplace).click();
         await page.locator(this.commonPageLocator.classOptionDropdown).getByText(marketplaceName).click();
         await page.getByText(this.managementPageLocator.inputSelectNetwork).click();
         await page.locator(this.commonPageLocator.classOptionDropdown).getByText(networkName).click();
     }
 
-    async delegateVotes(page: Page, votes = 2, toAddress = environment.WALLET_ADDRESS, marketplaceName = 'bepro', networkName = 'Mumbai') {
+    async delegateVotes(page: Page, votes = 2, toAddress = environment.WALLET_ADDRESS_CREATE_NETWORK, marketplaceName = 'bepro', networkName = environment.NETWORK_NAME) {
         await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName)
         await this.checkValue(page);
         await page.getByTestId(this.managementPageLocator.inputDelegateVotesAmount).fill(`${votes}`);
@@ -23,7 +22,7 @@ export default class VotingPowerPage extends Locators {
         await customConfirmTransaction(page);
     }
 
-    async lockVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = 'Mumbai') {
+    async lockVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = environment.NETWORK_NAME) {
         await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName)
         await wait(FIVE_SECONDS);
         await this.checkValue(page);
@@ -33,8 +32,10 @@ export default class VotingPowerPage extends Locators {
             await page.getByTestId(this.managementPageLocator.inputBeproVotesAmountToUnlock).inputValue();
         await page.getByTestId(this.managementPageLocator.inputBeproAmountToLock).fill(`${votes}`);
         await wait(TWO_SECONDS);
-        await page.getByTestId(this.commonPageLocator.btnApproveLock).click();
-        await customApprove(page);
+        if (!await page.getByTestId(this.commonPageLocator.btnApproveLock).isDisabled()) {
+            await page.getByTestId(this.commonPageLocator.btnApproveLock).click();
+            await customApprove(page);
+        }
         await page.getByTestId(this.managementPageLocator.btnGetVotes).click();
         await page.getByTestId(this.managementPageLocator.modalConfirmGetVotes).click();
         await customConfirmTransaction(page);
@@ -48,7 +49,7 @@ export default class VotingPowerPage extends Locators {
         };
     }
 
-    async unlockVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = 'Mumbai') {
+    async unlockVotes(page: Page, votes = 2, marketplaceName = 'bepro', networkName = environment.NETWORK_NAME) {
         await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName);
         await wait(FIVE_SECONDS);
         await page.getByTestId(this.managementPageLocator.tabUnlock).click();
@@ -71,9 +72,8 @@ export default class VotingPowerPage extends Locators {
         };
     }
 
-    async unlockAllVotes(page: Page, marketplaceName = 'bepro', networkName = 'Mumbai') {
+    async unlockAllVotes(page: Page, marketplaceName = 'bepro', networkName = environment.NETWORK_NAME) {
         await this.selectMarketplaceAndNetwork(page, marketplaceName, networkName)
-        console.log('unlocking all votes');
         await page.getByTestId(this.managementPageLocator.tabUnlock).click();
         await page.locator('div.mt-4 > div > div > div:nth-of-type(1) div.my-2 > span').click();
         await page.getByTestId(this.managementPageLocator.btnGetVotes).click();
@@ -84,18 +84,14 @@ export default class VotingPowerPage extends Locators {
     async checkValue(page: Page) {
         const beproAvailable = await page.getByText('TBEPRO Available').textContent();
         if (beproAvailable?.includes('0 TBEPRO Available')) {
-            console.log(beproAvailable);
-            
             await wait(2000);
             this.checkValue(page);
         } else {
-            console.log('Page loaded');
             await wait(1000);
         }
     }
 
     async checkCuratorStatus(page: Page) {
-        console.log('checking curator status');
         await page.getByTestId(this.commonPageLocator.btnSettings).first().click();
         await page.getByTestId(this.managementPageLocator.btnCopyAddress).click();
         await page.getByTestId(this.commonPageLocator.btnMarketPlaces).click();
@@ -104,7 +100,6 @@ export default class VotingPowerPage extends Locators {
         await wait(2000);
         await page.getByTestId(this.curatorsPageLocator.inputSearchBar).fill(await getClipBoard(page));
         await expect(page.locator('div.p-3')).toHaveCount(1);
-        console.log('curator status ok');
     }
 
 }

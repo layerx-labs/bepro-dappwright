@@ -95,7 +95,8 @@ export default class Locators {
         dropdownOptionProposal: '.react-select__option',
         componentProposalstatus: '#root-container > div.container-xl > div > div > div.mt-3.row.justify-content-between > div:nth-child(2) > div',
         proposalItemRow: 'proposal-item-row',
-        deliverableItemRow: 'deliverable-item-row'
+        deliverableItemRow: 'deliverable-item-row',
+        chainFilter: 'chain-filder',
     }
 
 

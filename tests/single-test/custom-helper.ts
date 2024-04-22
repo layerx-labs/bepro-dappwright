@@ -43,7 +43,7 @@ export const customSignin = async (page: Page, address: string): Promise<void> =
     });
   };
 
-export async function signIn(page: Page, address: string = environment.WALLET_ADDRESS_CREATE_NETWORK): Promise<void> {
+export async function signIn(page: Page, address: string = environment.WALLET_ADDRESS): Promise<void> {
     await connectMetaMask(page);
     await customSignin(page, address);
 }
@@ -80,7 +80,6 @@ export async function customSign(page: Page, waitForTransaction: boolean = true)
 };
 
 export async function customApprove(page: Page, waitForTransaction: boolean = true): Promise<void> {
-    console.log('Approving');
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
@@ -100,7 +99,6 @@ export async function customApprove(page: Page, waitForTransaction: boolean = tr
 }
 
 export async function customConfirmTransaction(page: Page, waitForTransaction: boolean = true): Promise<void> {
-    console.log('Confirming');
     const popup = await page.context().waitForEvent('page');
     await popup.waitForLoadState();
     await popup.bringToFront();
@@ -165,18 +163,15 @@ export async function getRandomFloat(min: number, max: number): Promise<number> 
 };
 
 export async function tryToChangeParameters(page: Page, configToChange: string, valueToChange: number, saveButton: string) {
-
     if (await page.getByTestId(configToChange).inputValue() == '0' || await page.getByTestId(configToChange).inputValue() == '') {
-        console.log('value: 0');
         await wait(1000);
         await tryToChangeParameters(page, configToChange, valueToChange, saveButton)
     } else if (await page.getByTestId(configToChange).inputValue() == await formatValue(valueToChange)) {
-        console.log('No need to change the value');
         await page.getByTestId(locators.managementPageLocator.tabLogoAndColors).click();
         return;
     } else if (await page.getByTestId(configToChange).inputValue() != `${valueToChange}` && await page.getByTestId(configToChange).inputValue() != '0') {
-        console.log('changing value to : ', valueToChange);
         await page.getByTestId(configToChange).fill(`${valueToChange}`);
+        await wait(2000);
         await page.getByTestId(saveButton).first().click();
         await customConfirmTransaction(page);
         return;
@@ -199,15 +194,12 @@ export async function checkApproveDone(page: Page): Promise<boolean> {
     const approve = await page.waitForSelector('button:text("approve")', { timeout: 5000 }).catch(() => null);
     const botaoApprove = await page.waitForSelector('button:text("Approve")', { timeout: 5000 }).catch(() => null);
     if (botaoApprove) {
-        console.log('Approve found');
         await botaoApprove.click();
         return true;
     } else if (approve) {
-        console.log('approve found');
         await approve.click();
         return true;
     } else {
-        console.log('Approve not found');
         return false;
     }
 }
